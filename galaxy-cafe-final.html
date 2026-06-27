@@ -1,0 +1,4854 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galaxy Café & Restaurant | Fine South Indian Dining</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ============================================
+   GALAXY CAFÉ & RESTAURANT - WORLD CLASS STYLES
+   Premium South Indian Restaurant Website
+   ============================================ */
+
+/* CSS Variables */
+:root {
+    --gold: #C9A962;
+    --gold-light: #E8D5A3;
+    --cafe-bg: #E8D5A3;
+    --gold-dark: #9A7B3D;
+    --cream: #F5F0E8;
+    --cream-dark: #E8E0D4;
+    --black: #0A0A0A;
+    --black-light: #1A1A1A;
+    --black-lighter: #2A2A2A;
+    --white: #FFFFFF;
+    --white-off: #F8F6F3;
+    --text-dark: #1A1A1A;
+    --text-light: #666666;
+    --text-muted: #999999;
+    --success: #28A745;
+    --danger: #DC3545;
+    --warning: #FFC107;
+
+    --font-display: 'Playfair Display', serif;
+    --font-elegant: 'Cormorant Garamond', serif;
+    --font-body: 'Montserrat', sans-serif;
+
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+    --shadow-md: 0 8px 30px rgba(0,0,0,0.12);
+    --shadow-lg: 0 20px 60px rgba(0,0,0,0.15);
+    --shadow-gold: 0 0 30px rgba(201, 169, 98, 0.3);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--black);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gold);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gold-light);
+}
+
+/* ============================================
+   LOADING SCREEN
+   ============================================ */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#loading-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.loader-content {
+    text-align: center;
+}
+
+.loader-logo {
+    width: 200px;
+    height: auto;
+    margin-bottom: 30px;
+    animation: loaderPulse 2s ease-in-out infinite;
+}
+
+@keyframes loaderPulse {
+    0%, 100% { opacity: 0.6; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1.02); }
+}
+
+.loader-line {
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 20px;
+    animation: loaderLine 1.5s ease-in-out infinite;
+}
+
+@keyframes loaderLine {
+    0% { width: 0; opacity: 0; }
+    50% { width: 150px; opacity: 1; }
+    100% { width: 0; opacity: 0; }
+}
+
+.loader-text {
+    color: var(--gold);
+    font-family: var(--font-elegant);
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   NAVIGATION
+   ============================================ */
+#navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 15px 0;
+    transition: var(--transition-medium);
+    background: #FFFFFF;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Top (un-scrolled, over Home) state: white header with dark text */
+#navbar .nav-link { color: var(--text-dark); }
+#navbar .nav-link.admin-link { color: var(--gold-dark) !important; }
+#navbar .mobile-toggle span { background: var(--text-dark); }
+
+#navbar.scrolled {
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 10px 0;
+    box-shadow: var(--shadow-md);
+}
+
+/* Scrolled (dark) state: restore light text */
+#navbar.scrolled .nav-link { color: var(--white); }
+#navbar.scrolled .nav-link.admin-link { color: var(--gold) !important; }
+#navbar.scrolled .mobile-toggle span { background: var(--white); }
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-logo img {
+    height: 55px;
+    width: auto;
+    transition: var(--transition-fast);
+}
+
+#navbar.scrolled .nav-logo img {
+    height: 45px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 35px;
+}
+
+.nav-link {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    position: relative;
+    padding: 5px 0;
+    transition: var(--transition-fast);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--gold);
+    transition: var(--transition-medium);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+    width: 100%;
+}
+
+.nav-link:hover {
+    color: var(--gold);
+}
+
+.admin-link {
+    color: var(--gold) !important;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* ============================================
+   AUTH — Login / Signup button, user chip & menu
+   ============================================ */
+.auth-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    border-radius: 30px;
+    color: var(--gold-dark);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    white-space: nowrap;
+}
+
+.auth-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    box-shadow: var(--shadow-gold);
+}
+
+/* In the white (top) navbar, keep label readable; in scrolled (dark) navbar, gold */
+#navbar.scrolled .auth-btn { color: var(--gold); }
+#navbar.scrolled .auth-btn:hover { color: var(--black); }
+
+/* Inbox icon button + unread badge */
+.inbox-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    color: var(--gold-dark);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.inbox-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    box-shadow: var(--shadow-gold);
+}
+#navbar.scrolled .inbox-btn { color: var(--gold); }
+#navbar.scrolled .inbox-btn:hover { color: var(--black); }
+.inbox-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--danger, #e23b3b);
+    color: #fff;
+    border-radius: 9px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+}
+
+/* Inbox message list */
+.inbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+.inbox-item {
+    background: var(--black-light);
+    border: 1px solid var(--black-lighter);
+    border-left: 3px solid var(--gold);
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+.inbox-item.unread { border-left-color: var(--danger, #e23b3b); }
+.inbox-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.inbox-item-title { color: var(--white); font-weight: 600; font-size: 0.95rem; }
+.inbox-item-date { color: var(--text-muted); font-size: 0.75rem; }
+.inbox-item-body { color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; }
+.inbox-empty { color: var(--text-muted); text-align: center; padding: 30px 10px; }
+
+/* Logged-in chip */
+.user-chip {
+    position: relative;
+}
+
+.user-chip-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 14px 6px 6px;
+    background: transparent;
+    border: 1px solid rgba(201, 169, 98, 0.45);
+    border-radius: 30px;
+    color: var(--text-dark);
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+#navbar.scrolled .user-chip-name { color: var(--white); }
+
+.user-chip-name:hover { border-color: var(--gold); }
+
+.user-chip-name i { font-size: 0.7rem; opacity: 0.7; transition: var(--transition-fast); }
+.user-chip.open .user-chip-name i { transform: rotate(180deg); }
+
+.user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+.user-menu {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    min-width: 230px;
+    background: var(--black-light);
+    border: 1px solid var(--black-lighter);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: var(--transition-fast);
+    z-index: 1200;
+}
+
+.user-chip.open .user-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.user-menu-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 12px 14px;
+    border-bottom: 1px solid var(--black-lighter);
+    margin-bottom: 8px;
+}
+
+.user-menu-name { color: var(--white); font-weight: 700; font-size: 0.92rem; }
+.user-menu-email { color: var(--text-muted); font-size: 0.78rem; word-break: break-all; }
+
+.user-menu-logout {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: var(--white-off);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.user-menu-logout:hover { background: rgba(220, 53, 69, 0.15); color: var(--danger); }
+.user-menu-logout i { color: var(--gold); transition: var(--transition-fast); }
+.user-menu-logout:hover i { color: var(--danger); }
+
+/* ============================================
+   AUTH MODAL — tabs, forms, helpers
+   ============================================ */
+.auth-modal-content { max-width: 440px; padding: 38px 38px 34px; }
+
+.auth-header { text-align: center; margin-bottom: 24px; }
+.auth-header .text-logo { margin-bottom: 10px; }
+.auth-header h2 {
+    font-family: var(--font-display);
+    color: var(--white);
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+}
+.auth-header p { color: var(--text-muted); font-size: 0.85rem; }
+
+.auth-tabs {
+    display: flex;
+    gap: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 30px;
+    padding: 5px;
+    margin-bottom: 26px;
+}
+
+.auth-tab {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: none;
+    border-radius: 30px;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.auth-tab.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black);
+    box-shadow: var(--shadow-gold);
+}
+
+.auth-form { display: none; flex-direction: column; gap: 16px; }
+.auth-form.active { display: flex; animation: handiFadeIn 0.35s ease both; }
+
+.auth-error {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: rgba(220, 53, 69, 0.12);
+    border: 1px solid rgba(220, 53, 69, 0.35);
+    color: #ff8a93;
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+.auth-error.active { display: flex; }
+
+.auth-success-msg {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    background: rgba(40, 167, 69, 0.12);
+    border: 1px solid rgba(40, 167, 69, 0.35);
+    color: #7ee2a0;
+    font-size: 0.8rem;
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+.auth-success-msg.active { display: flex; }
+
+.auth-forgot {
+    text-align: right;
+    margin-top: -4px;
+}
+.auth-forgot a {
+    color: var(--gold);
+    font-size: 0.8rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.auth-forgot a:hover { color: var(--gold-light); text-decoration: underline; }
+
+.auth-switch {
+    text-align: center;
+    margin-top: 18px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+}
+.auth-switch a {
+    color: var(--gold);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+.auth-switch a:hover { text-decoration: underline; }
+
+.auth-back {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: var(--transition-fast);
+}
+.auth-back:hover { color: var(--gold); }
+
+.mobile-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.mobile-toggle span {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: var(--white);
+    transition: var(--transition-fast);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 300px;
+    height: 100vh;
+    background: var(--black);
+    z-index: 999;
+    padding: 100px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    transition: var(--transition-medium);
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.mobile-menu a {
+    color: var(--white);
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--black-lighter);
+    transition: var(--transition-fast);
+}
+
+.mobile-menu a:hover {
+    color: var(--gold);
+    padding-left: 10px;
+}
+
+/* ============================================
+   HERO SECTION
+   ============================================ */
+.hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background:
+        radial-gradient(ellipse 120% 80% at 50% 0%, #F1E2B8 0%, transparent 60%),
+        linear-gradient(165deg, #EEDDAE 0%, var(--cafe-bg) 45%, #DBC489 100%);
+    overflow: hidden;
+    padding: 120px 30px 80px;
+}
+
+.hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.hero-particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: var(--gold);
+    border-radius: 50%;
+    opacity: 0;
+    animation: floatParticle 8s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.8s);
+}
+
+.hero-particle:nth-child(1) { top: 20%; left: 10%; }
+.hero-particle:nth-child(2) { top: 60%; left: 20%; }
+.hero-particle:nth-child(3) { top: 30%; left: 80%; }
+.hero-particle:nth-child(4) { top: 70%; left: 70%; }
+.hero-particle:nth-child(5) { top: 40%; left: 50%; }
+.hero-particle:nth-child(6) { top: 15%; left: 60%; }
+.hero-particle:nth-child(7) { top: 80%; left: 40%; }
+.hero-particle:nth-child(8) { top: 50%; left: 90%; }
+
+@keyframes floatParticle {
+    0%, 100% { opacity: 0; transform: translateY(0) scale(0); }
+    50% { opacity: 0.8; transform: translateY(-100px) scale(1); }
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(ellipse at 20% 35%, rgba(255, 248, 224, 0.55) 0%, transparent 45%),
+        radial-gradient(ellipse at 82% 60%, rgba(154, 123, 61, 0.10) 0%, transparent 50%),
+        radial-gradient(ellipse 140% 120% at 50% 120%, rgba(120, 92, 40, 0.18) 0%, transparent 55%);
+    pointer-events: none;
+}
+
+.hero-content {
+    text-align: center;
+    max-width: 900px;
+    position: relative;
+    z-index: 2;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(201, 169, 98, 0.15);
+    border: 1px solid rgba(201, 169, 98, 0.3);
+    padding: 10px 25px;
+    border-radius: 50px;
+    margin-bottom: 30px;
+    animation: fadeInDown 1s ease;
+}
+
+.hero-badge i {
+    color: var(--gold);
+    font-size: 0.8rem;
+}
+
+.hero-badge span {
+    color: var(--gold);
+    font-family: var(--font-elegant);
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.hero-title {
+    margin-bottom: 25px;
+}
+
+.title-line {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+    animation: fadeInUp 1s ease forwards;
+    opacity: 0;
+}
+
+.title-line:nth-child(1) { animation-delay: 0.2s; }
+.title-line:nth-child(2) { animation-delay: 0.4s; }
+.title-line:nth-child(3) { animation-delay: 0.6s; }
+
+.title-line.accent {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 800;
+}
+
+.hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.8;
+    animation: fadeInUp 1s ease 0.8s forwards;
+    opacity: 0;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 60px;
+    animation: fadeInUp 1s ease 1s forwards;
+    opacity: 0;
+    flex-wrap: wrap;
+}
+
+.hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    animation: fadeInUp 1s ease 1.2s forwards;
+    opacity: 0;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 8px;
+}
+
+.hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: fadeIn 1s ease 1.5s forwards;
+    opacity: 0;
+}
+
+.scroll-mouse {
+    width: 26px;
+    height: 40px;
+    border: 2px solid var(--gold);
+    border-radius: 13px;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+}
+
+.scroll-wheel {
+    width: 4px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 2px;
+    animation: scrollWheel 2s ease-in-out infinite;
+}
+
+@keyframes scrollWheel {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(8px); opacity: 0.3; }
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn-primary,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 35px;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition-medium);
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: var(--transition-medium);
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-gold);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--white);
+    border: 2px solid var(--gold);
+}
+
+.btn-secondary:hover {
+    background: var(--gold);
+    color: var(--black);
+    transform: translateY(-3px);
+}
+
+.btn-large {
+    padding: 16px 50px;
+    font-size: 0.9rem;
+}
+
+.btn-full {
+    width: 100%;
+    justify-content: center;
+}
+
+/* ============================================
+   SECTION STYLES
+   ============================================ */
+section {
+    padding: 100px 30px;
+    position: relative;
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.section-header.light .section-tag,
+.section-header.light .section-title {
+    color: var(--white);
+}
+
+.section-tag {
+    display: inline-block;
+    font-family: var(--font-elegant);
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.section-tag::before,
+.section-tag::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+}
+
+.section-tag::before { right: calc(100% + 15px); }
+.section-tag::after { left: calc(100% + 15px); }
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--text-dark);
+    line-height: 1.2;
+}
+
+.section-title span {
+    color: var(--gold);
+    font-style: italic;
+}
+
+/* ============================================
+   ABOUT SECTION
+   ============================================ */
+.about {
+    background: var(--cream);
+}
+
+.about-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+}
+
+.about-card {
+    background: var(--white);
+    padding: 50px 35px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-medium);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+}
+
+.about-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: var(--transition-medium);
+}
+
+.about-card:hover::before {
+    transform: scaleX(1);
+}
+
+.about-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(201, 169, 98, 0.2);
+}
+
+.about-card.featured {
+    background: var(--black);
+    color: var(--white);
+    transform: scale(1.05);
+}
+
+.about-card.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+
+.about-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 1.8rem;
+    color: var(--white);
+    box-shadow: var(--shadow-gold);
+}
+
+.about-card.featured .about-icon {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+}
+
+.about-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.about-card p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+.about-card.featured p {
+    color: var(--text-muted);
+}
+
+.about-badge {
+    position: absolute;
+    top: 20px;
+    right: -35px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 40px;
+    transform: rotate(45deg);
+}
+
+/* ============================================
+   MENU SECTION
+   ============================================ */
+.menu {
+    background: var(--white-off);
+}
+
+.menu-filters {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 50px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 10px 25px;
+    background: transparent;
+    border: 2px solid var(--cream-dark);
+    border-radius: 50px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--black);
+}
+
+.menu-grid {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+}
+
+.menu-item {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-medium);
+    position: relative;
+}
+
+.menu-item:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+}
+
+.menu-item-image {
+    aspect-ratio: 4 / 5;
+    background: #f6efe1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-item-image i {
+    font-size: 4rem;
+    color: var(--gold);
+    opacity: 0.3;
+    transition: var(--transition-medium);
+}
+
+.menu-item:hover .menu-item-image i {
+    opacity: 0.6;
+    transform: scale(1.1);
+}
+
+.menu-item-badge {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+}
+
+.menu-item-content {
+    padding: 25px;
+}
+
+.menu-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.menu-item-title {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.menu-item-price {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.menu-item-desc {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.menu-item-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-item-rating {
+    display: flex;
+    gap: 3px;
+    color: var(--gold);
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   ORDER SECTION (3-BOX LAYOUT)
+   ============================================ */
+.order-section {
+    background: var(--black);
+    padding: 100px 30px;
+}
+
+.order-section .section-title,
+.order-section .section-tag {
+    color: var(--white);
+}
+
+.order-container {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+.order-box {
+    background: var(--black-light);
+    border-radius: 20px;
+    padding: 30px;
+    border: 1px solid var(--black-lighter);
+    transition: var(--transition-medium);
+}
+
+.order-box:hover {
+    border-color: rgba(201, 169, 98, 0.3);
+    box-shadow: 0 0 40px rgba(201, 169, 98, 0.1);
+}
+
+.box-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--black-lighter);
+}
+
+.box-header i {
+    font-size: 1.3rem;
+    color: var(--gold);
+}
+
+.box-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--white);
+}
+
+/* QR Scanner */
+.qr-scanner-container {
+    text-align: center;
+}
+
+#qr-reader {
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    border: 2px dashed var(--gold);
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--black);
+}
+
+#qr-reader video {
+    border-radius: 15px;
+}
+
+.qr-text {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Order Items */
+.order-items {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.empty-order {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 40px 20px;
+    font-style: italic;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--black-lighter);
+}
+
+.order-item-info h4 {
+    color: var(--white);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.order-item-info span {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.order-item-qty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.qty-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--black-lighter);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+}
+
+.order-item-price {
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.order-summary {
+    border-top: 2px solid var(--gold);
+    padding-top: 15px;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.summary-row.total {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1.1rem;
+    border-top: 1px solid var(--black-lighter);
+    margin-top: 8px;
+    padding-top: 12px;
+}
+
+.summary-row.total span:last-child {
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+}
+
+/* Payment Methods */
+.payment-methods {
+    margin-bottom: 25px;
+}
+
+.payment-option {
+    display: block;
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.payment-option input {
+    display: none;
+}
+
+.option-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px;
+    background: var(--black);
+    border: 2px solid var(--black-lighter);
+    border-radius: 12px;
+    transition: var(--transition-fast);
+}
+
+.payment-option input:checked + .option-box {
+    border-color: var(--gold);
+    background: rgba(201, 169, 98, 0.1);
+}
+
+.option-box i {
+    font-size: 1.2rem;
+    color: var(--gold);
+}
+
+.option-box span {
+    color: var(--white);
+    font-size: 0.85rem;
+}
+
+.pay-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    border: none;
+    border-radius: 12px;
+    color: var(--black);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: var(--transition-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pay-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
+}
+
+.pay-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+#paymentStatus {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   RESERVATION SECTION
+   ============================================ */
+.reservation {
+    position: relative;
+    padding: 0;
+    min-height: 700px;
+    display: flex;
+    align-items: center;
+}
+
+.reservation-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--cafe-bg);
+    background-size: cover;
+}
+
+.reservation-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 100px 30px;
+}
+
+.reservation-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-group {
+    position: relative;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 15px 20px 15px 50px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(201, 169, 98, 0.2);
+    border-radius: 12px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+    outline: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.12);
+    box-shadow: 0 0 20px rgba(201, 169, 98, 0.1);
+}
+
+.form-group i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gold);
+    font-size: 1rem;
+}
+
+.form-group textarea + i {
+    top: 20px;
+    transform: none;
+}
+
+/* ============================================
+   CONTACT SECTION
+   ============================================ */
+.contact {
+    background: var(--cream);
+}
+
+.contact-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: stretch;
+}
+
+.contact-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.info-card {
+    background: var(--white);
+    padding: 30px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-medium);
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.info-card i {
+    font-size: 2rem;
+    color: var(--gold);
+    margin-bottom: 15px;
+}
+
+.info-card h4 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.info-card p {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    line-height: 1.6;
+}
+
+.contact-map {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    min-height: 400px;
+}
+
+.contact-map iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 400px;
+}
+
+/* ============================================
+   ADMIN SECTION
+   ============================================ */
+.admin-section {
+    padding: 0;
+    min-height: 100vh;
+    background: var(--black);
+}
+
+.admin-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.login-card {
+    background: var(--black-light);
+    padding: 50px;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    border: 1px solid var(--black-lighter);
+}
+
+.login-logo {
+    width: 120px;
+    height: auto;
+    margin-bottom: 25px;
+}
+
+.login-card h2 {
+    font-family: var(--font-display);
+    color: var(--white);
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+}
+
+.login-card .form-group {
+    margin-bottom: 20px;
+}
+
+.login-card .form-group input {
+    background: var(--black);
+    color: var(--white);
+}
+
+.admin-dashboard {
+    display: flex;
+    min-height: 100vh;
+}
+
+.admin-sidebar {
+    width: 280px;
+    background: var(--black-light);
+    border-right: 1px solid var(--black-lighter);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 0;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 25px 30px;
+    border-bottom: 1px solid var(--black-lighter);
+    margin-bottom: 20px;
+}
+
+.admin-brand img {
+    width: 45px;
+    height: auto;
+}
+
+.admin-brand span {
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+}
+
+.admin-nav {
+    flex: 1;
+    padding: 0 15px;
+}
+
+.admin-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-radius: 12px;
+    margin-bottom: 5px;
+    transition: var(--transition-fast);
+    font-size: 0.9rem;
+}
+
+.admin-nav-item:hover,
+.admin-nav-item.active {
+    background: rgba(201, 169, 98, 0.15);
+    color: var(--gold);
+}
+
+.admin-nav-item i {
+    width: 20px;
+}
+
+.logout-btn {
+    margin: 20px 25px 0;
+    padding: 14px;
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    border-radius: 12px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.logout-btn:hover {
+    background: var(--danger);
+    color: var(--white);
+}
+
+.admin-main {
+    margin-left: 280px;
+    flex: 1;
+    padding: 30px;
+    min-height: 100vh;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--black-lighter);
+}
+
+.admin-header h2 {
+    color: var(--white);
+    font-family: var(--font-display);
+}
+
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--gold);
+}
+
+.admin-user i {
+    font-size: 1.5rem;
+}
+
+.admin-content {
+    color: var(--white);
+}
+
+/* Admin Tables */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--black-lighter);
+}
+
+.admin-table th {
+    color: var(--gold);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.admin-table td {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.admin-table tr:hover td {
+    color: var(--white);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-pending { background: rgba(255, 193, 7, 0.2); color: var(--warning); }
+.status-confirmed { background: rgba(40, 167, 69, 0.2); color: var(--success); }
+.status-cancelled { background: rgba(220, 53, 69, 0.2); color: var(--danger); }
+.status-completed { background: rgba(201, 169, 98, 0.2); color: var(--gold); }
+
+/* Admin Stats Cards */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: var(--black-light);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid var(--black-lighter);
+}
+
+.stat-card-icon {
+    width: 50px;
+    height: 50px;
+    background: rgba(201, 169, 98, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.stat-card-icon i {
+    color: var(--gold);
+    font-size: 1.3rem;
+}
+
+.stat-card-value {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--white);
+    font-weight: 700;
+}
+
+.stat-card-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 5px;
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition-medium);
+}
+
+.modal.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--black-light);
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    border: 1px solid var(--black-lighter);
+    transform: scale(0.9);
+    transition: var(--transition-medium);
+}
+
+.modal.active .modal-content {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.modal-close:hover {
+    color: var(--gold);
+}
+
+/* Feedback Modal */
+.feedback-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.feedback-header img {
+    width: 80px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.feedback-header h2 {
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.feedback-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.rating-stars {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 25px;
+    flex-direction: row-reverse;
+}
+
+.rating-stars input {
+    display: none;
+}
+
+.rating-stars label {
+    font-size: 2rem;
+    color: var(--black-lighter);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.rating-stars label:hover,
+.rating-stars label:hover ~ label,
+.rating-stars input:checked ~ label {
+    color: var(--gold);
+}
+
+/* Payment Success Modal */
+.success-content {
+    text-align: center;
+    padding: 50px 40px;
+}
+
+.success-animation {
+    margin-bottom: 25px;
+}
+
+.success-circle {
+    width: 80px;
+    height: 80px;
+    background: var(--success);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    animation: successPop 0.5s ease;
+}
+
+.success-circle i {
+    color: var(--white);
+    font-size: 2rem;
+}
+
+@keyframes successPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.success-content h2 {
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.success-content p {
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.success-content p span {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.success-note {
+    font-size: 0.85rem;
+    font-style: italic;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+    background: var(--cafe-bg);
+    padding: 80px 30px 30px;
+    border-top: 1px solid rgba(0,0,0,0.12);
+}
+
+.footer-content {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr;
+    gap: 50px;
+}
+
+.footer-brand img {
+    width: 150px;
+    height: auto;
+    margin-bottom: 20px;
+}
+
+.footer-brand p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: 25px;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--black-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: var(--transition-fast);
+    border: 1px solid var(--black-lighter);
+}
+
+.social-links a:hover {
+    background: var(--gold);
+    color: var(--black);
+    transform: translateY(-3px);
+}
+
+.footer-links h4 {
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.footer-links a {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    transition: var(--transition-fast);
+}
+
+.footer-links a:hover {
+    color: var(--gold);
+    padding-left: 5px;
+}
+
+.footer-newsletter h4 {
+    color: var(--white);
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.footer-newsletter p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 10px;
+}
+
+.newsletter-form input {
+    flex: 1;
+    padding: 12px 18px;
+    background: var(--black-light);
+    border: 1px solid var(--black-lighter);
+    border-radius: 10px;
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    outline: none;
+    transition: var(--transition-fast);
+}
+
+.newsletter-form input:focus {
+    border-color: var(--gold);
+}
+
+.newsletter-form button {
+    width: 45px;
+    height: 45px;
+    background: var(--gold);
+    border: none;
+    border-radius: 10px;
+    color: var(--black);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.newsletter-form button:hover {
+    transform: scale(1.05);
+}
+
+.footer-feedback-btn {
+    margin-top: 14px;
+    background: var(--gold-dark);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+.footer-feedback-btn:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+}
+
+.footer-bottom {
+    max-width: 1300px;
+    margin: 50px auto 0;
+    padding-top: 25px;
+    border-top: 1px solid var(--black-lighter);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.footer-bottom p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.footer-tag {
+    color: var(--gold) !important;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ============================================
+   TOAST NOTIFICATION
+   ============================================ */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--black-light);
+    color: var(--white);
+    padding: 16px 25px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--black-lighter);
+    z-index: 5000;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: var(--transition-medium);
+}
+
+.toast.active {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast i {
+    color: var(--gold);
+    font-size: 1.2rem;
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+@media (max-width: 1200px) {
+    .about-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-card.featured { transform: scale(1); }
+    .about-card.featured:hover { transform: translateY(-10px); }
+    .order-container { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 992px) {
+    .nav-links { display: none; }
+    .mobile-toggle { display: flex; }
+    .hero-stats { gap: 30px; }
+    .contact-grid { grid-template-columns: 1fr; }
+    .contact-map { min-height: 300px; }
+    .footer-content { grid-template-columns: 1fr 1fr; }
+    .admin-sidebar { width: 100%; position: relative; height: auto; }
+    .admin-main { margin-left: 0; }
+    .admin-dashboard { flex-direction: column; }
+}
+
+@media (max-width: 768px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    .hero-stats { flex-direction: column; gap: 20px; }
+    .menu-grid { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .footer-content { grid-template-columns: 1fr; text-align: center; }
+    .social-links { justify-content: center; }
+    .newsletter-form { max-width: 400px; margin: 0 auto; }
+    .contact-info { grid-template-columns: 1fr; }
+    .admin-table { font-size: 0.8rem; }
+    .admin-table th, .admin-table td { padding: 10px; }
+}
+
+@media (max-width: 480px) {
+    .section-header { margin-bottom: 40px; }
+    .login-card { padding: 30px 20px; }
+    .modal-content { padding: 25px; }
+    .success-content { padding: 30px 20px; }
+}
+
+/* Handi (Bulk Order) Section */
+.handi-section {
+    background: var(--cafe-bg);
+    padding: 100px 5%;
+}
+.handi-section .section-subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+.handi-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.handi-box {
+    background: var(--black-light);
+    border: 1px solid var(--gold-border);
+    border-radius: 24px;
+    padding: 40px 30px;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+.handi-box:hover {
+    transform: translateY(-10px);
+    border-color: var(--gold);
+    box-shadow: 0 20px 60px rgba(201, 169, 98, 0.15);
+}
+.handi-box.featured {
+    border: 2px solid var(--gold);
+    transform: scale(1.05);
+    box-shadow: 0 15px 50px rgba(201, 169, 98, 0.2);
+}
+.handi-box.featured:hover {
+    transform: scale(1.05) translateY(-10px);
+}
+.handi-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: var(--gold);
+    color: var(--black);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.handi-badge.best {
+    background: var(--success);
+    color: #fff;
+}
+.handi-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+.handi-header i {
+    font-size: 3rem;
+    color: var(--gold);
+    margin-bottom: 15px;
+    display: block;
+}
+.handi-header h3 {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    color: var(--white);
+}
+.handi-price {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--gold-border);
+}
+.handi-price .currency {
+    font-size: 1.5rem;
+    color: var(--gold);
+    font-weight: 600;
+    vertical-align: top;
+}
+.handi-price .amount {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: var(--gold);
+    line-height: 1;
+}
+.handi-items {
+    list-style: none;
+    margin-bottom: 30px;
+}
+.handi-items li {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(201, 169, 98, 0.1);
+}
+.handi-items li:last-child {
+    border-bottom: none;
+}
+.handi-items li i {
+    color: var(--success);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .handi-container {
+        grid-template-columns: 1fr;
+    }
+    .handi-box.featured {
+        transform: scale(1);
+    }
+    .handi-box.featured:hover {
+        transform: scale(1) translateY(-10px);
+    }
+}
+
+
+/* Payment Screen */
+.pay-screen {
+    background: #fff;
+    border-radius: 20px;
+    padding: 25px;
+    margin-top: 15px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.4);
+    animation: slideUp 0.5s ease;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.pay-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+.pay-merchant {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.pay-logo {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-weight: 800;
+}
+.pay-name {
+    font-weight: 700;
+    color: #1a1a1a;
+    font-size: 1rem;
+}
+.pay-loc {
+    font-size: 0.75rem;
+    color: #888;
+}
+.pay-total {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+.pay-apps {
+    margin-bottom: 20px;
+}
+.pay-apps-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.pay-apps-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.pay-app {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 15px 10px;
+    border-radius: 12px;
+    text-decoration: none;
+    border: 2px solid #f0f0f0;
+    background: #fafafa;
+    transition: all 0.2s ease;
+}
+.pay-app:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.pay-app-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.2rem;
+}
+.pay-app span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #333;
+}
+.pay-divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: #ccc;
+    font-size: 0.8rem;
+}
+.pay-divider::before,
+.pay-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}
+.pay-divider span {
+    padding: 0 15px;
+}
+.pay-qr {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.pay-qr-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin-bottom: 12px;
+}
+.pay-qr-img-wrap {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.pay-qr-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 16px;
+    border: 3px solid var(--gold);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    object-fit: cover;
+}
+.pay-qr-tag {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--black);
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(201, 169, 98, 0.4);
+}
+.pay-qr-hint {
+    font-size: 0.8rem;
+    color: #666;
+}
+.pay-upi-id {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.pay-upi-id span {
+    font-family: monospace;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+.pay-upi-id button {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.pay-waiting {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    background: #f0f8ff;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    color: #0066cc;
+    font-size: 0.9rem;
+}
+.pay-waiting.verifying {
+    background: #fff8e7;
+    color: #856404;
+}
+.pay-waiting i {
+    font-size: 1.2rem;
+}
+.pay-cancel {
+    width: 100%;
+    padding: 14px;
+    background: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    margin-bottom: 15px;
+}
+.pay-cancel:hover {
+    background: #f8f9fa;
+    color: #333;
+}
+.pay-secure {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 0.75rem;
+    color: #999;
+}
+.pay-secure i {
+    color: var(--success);
+}
+
+/* Text Logo */
+.text-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.text-logo .logo-text {
+    font-size: 1.6rem;
+    letter-spacing: 4px;
+    color: var(--gold);
+    font-family: var(--font-display);
+    font-weight: 800;
+}
+
+
+/* Fix Reservation Form Inputs - Dark Theme */
+.reservation-form input,
+.reservation-form select,
+.reservation-form textarea {
+    color: #1a1a1a !important;
+    background: rgba(255,255,255,0.95) !important;
+}
+.reservation-form input::placeholder,
+.reservation-form textarea::placeholder {
+    color: #666 !important;
+}
+.reservation-form select option {
+    color: #1a1a1a !important;
+    background: #fff !important;
+}
+/* Date picker fix */
+.reservation-form input[type="date"] {
+    color: #1a1a1a !important;
+}
+.reservation-form input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.3);
+}
+/* Time picker fix */
+.reservation-form input[type="time"] {
+    color: #1a1a1a !important;
+}
+
+
+/* ============================================
+   LIGHT-THEME SECTIONS (#E8D5A3 cream background)
+   Hero / Handi / Reserve / Footer now sit on a light
+   cream background, so light text is forced to black and
+   light/translucent surfaces get darker borders so they
+   don't blend into the cream.
+   ============================================ */
+
+/* ---- HERO ---- */
+.hero .title-line { color: #2A2113; }
+.hero .title-line.accent {
+    color: #8A6A2C;
+    background: linear-gradient(135deg, #B08A3C 0%, #8A6A2C 55%, #6E5320 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 1px 0 rgba(255, 250, 235, 0.35);
+}
+.hero .hero-subtitle { color: #564832; }
+.hero .stat-num { color: #8A6A2C; }
+.hero .stat-label { color: #5A4B33; }
+.hero .hero-stats .stat-item + .stat-item {
+    border-left: 1px solid rgba(138, 106, 44, 0.25);
+    padding-left: 60px;
+    margin-left: -30px;
+}
+.hero .hero-badge {
+    background: rgba(255, 252, 244, 0.65);
+    border-color: rgba(138, 106, 44, 0.45);
+    box-shadow: 0 6px 20px rgba(120, 92, 40, 0.12);
+    backdrop-filter: blur(4px);
+}
+.hero .hero-badge i,
+.hero .hero-badge span { color: #7A5C24; }
+.hero .hero-particle { background: #8A6A2C; opacity: 0; box-shadow: 0 0 6px rgba(138, 106, 44, 0.6); }
+.hero .btn-primary {
+    background: linear-gradient(135deg, #D8B765 0%, #BB9744 50%, #9A7B3D 100%);
+    color: #2A2113;
+    box-shadow: 0 8px 24px rgba(120, 92, 40, 0.28);
+}
+.hero .btn-primary:hover { box-shadow: 0 12px 30px rgba(120, 92, 40, 0.38); }
+.hero .btn-secondary { color: #2A2113; border-color: #8A6A2C; }
+.hero .btn-secondary:hover { background: #8A6A2C; color: #FFF9EB; }
+.hero .scroll-mouse { border-color: #8A6A2C; }
+.hero .scroll-mouse::before,
+.hero .hero-scroll i { color: #8A6A2C; }
+
+/* ---- HANDI ---- */
+/* Cards stay dark (no blend); only the section heading + intro
+   sit directly on cream and need darkening. */
+.handi-section .section-tag { color: var(--gold-dark); }
+.handi-section .section-title { color: var(--text-dark); }
+.handi-section .section-subtitle,
+.handi-section .handi-intro { color: #4a3f2a; }
+
+/* ---- RESERVE ---- */
+/* The header used `.section-header light` (forced white). Override to dark. */
+.reservation .section-header.light .section-tag { color: var(--gold-dark); }
+.reservation .section-header.light .section-title { color: var(--text-dark); }
+.reservation .form-group i { color: var(--gold-dark); }
+
+/* ---- FOOTER ---- */
+.footer .text-logo .logo-text { color: var(--gold-dark); }
+.footer .footer-brand p,
+.footer .footer-links a,
+.footer .footer-newsletter p,
+.footer .footer-bottom p { color: #3a3020; }
+.footer .footer-links h4,
+.footer .footer-newsletter h4 { color: var(--text-dark); }
+.footer .footer-links a:hover { color: var(--gold-dark); }
+.footer .footer-tag { color: var(--gold-dark) !important; }
+.footer .social-links a {
+    background: rgba(0,0,0,0.06);
+    color: #3a3020;
+    border-color: rgba(0,0,0,0.2);
+}
+.footer .social-links a:hover { background: var(--gold-dark); color: #fff; }
+.footer .footer-bottom { border-top-color: rgba(0,0,0,0.15); }
+.footer .newsletter-form input {
+    background: rgba(255,255,255,0.85);
+    color: var(--text-dark);
+    border-color: rgba(0,0,0,0.2);
+}
+.footer .newsletter-form button { background: var(--gold-dark); color: #fff; }
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* ============================================
+   MENU IMAGES (enhanced cards)
+   ============================================ */
+.menu-item-image img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+}
+.menu-item:hover .menu-item-image img {
+    transform: scale(1.08);
+}
+.menu-item-image .img-fallback {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--black-light), var(--black-lighter));
+}
+.menu-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.diet-dot {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #2e8b57;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.diet-dot::after {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2e8b57;
+}
+.diet-dot.non-veg {
+    border-color: #c0392b;
+}
+.diet-dot.non-veg::after {
+    background: #c0392b;
+}
+.menu-item-category {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* ============================================
+   HANDI TOGGLE + CARDS
+   ============================================ */
+.handi-intro {
+    max-width: 640px;
+    margin: 10px auto 0;
+    color: var(--text-light);
+    font-size: 0.95rem;
+}
+.handi-toggle {
+    display: inline-flex;
+    gap: 6px;
+    padding: 6px;
+    margin: 30px auto 50px;
+    background: var(--black-light);
+    border: 1px solid rgba(201, 169, 98, 0.25);
+    border-radius: 50px;
+}
+.handi-toggle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+.handi-toggle-btn i {
+    color: var(--gold);
+}
+.handi-toggle-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light, #e0c277));
+    color: var(--black);
+    box-shadow: var(--shadow-gold);
+}
+.handi-toggle-btn.active i {
+    color: var(--black);
+}
+.handi-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+@keyframes handiFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+.handi-container .handi-box {
+    animation: handiFadeIn 0.5s ease both;
+}
+.handi-container .handi-box:nth-child(2) { animation-delay: 0.08s; }
+.handi-container .handi-box:nth-child(3) { animation-delay: 0.16s; }
+.handi-container .handi-box:nth-child(4) { animation-delay: 0.24s; }
+@media (max-width: 600px) {
+    .handi-container { grid-template-columns: 1fr; }
+    .handi-toggle { flex-direction: column; border-radius: 18px; }
+    .handi-toggle-btn { justify-content: center; }
+}
+
+/* ============================================
+   ADMIN PANEL OVERLAY (route-based)
+   ============================================ */
+.admin-panel-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--black);
+    overflow-y: auto;
+    display: none;
+}
+.admin-panel-overlay.active {
+    display: block;
+}
+.admin-panel-overlay .admin-login {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.admin-panel-overlay .admin-dashboard {
+    min-height: 100vh;
+}
+.admin-back-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 100000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--black-light);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition-fast);
+}
+.admin-back-btn:hover {
+    background: var(--gold);
+    color: var(--black);
+    transform: translateY(-2px);
+}
+@media (max-width: 600px) {
+    .admin-back-btn span { display: none; }
+}
+
+</style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="loader-content">
+            <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+            <div class="loader-line"></div>
+            <p class="loader-text">Preparing Your Experience</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">Our Story</a></li>
+                <li><a href="#menu" class="nav-link">Menu</a></li>
+                <li><a href="#handi" class="nav-link">Handi</a></li>
+                <li><a href="#reservation" class="nav-link">Reserve</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="#" class="nav-link" onclick="event.preventDefault(); openFeedbackModal();">Feedback</a></li>
+            </ul>
+            <div class="nav-actions">
+                <!-- Inbox: notices from the restaurant (booking confirmed/cancelled). Hidden until logged in. -->
+                <button class="inbox-btn" id="inboxBtn" onclick="openInbox()" aria-label="Inbox" style="display:none;">
+                    <i class="fas fa-envelope"></i>
+                    <span class="inbox-badge" id="inboxBadge" style="display:none;">0</span>
+                </button>
+                <!-- Logged-out: show Login / Signup button -->
+                <button class="auth-btn" id="authBtn" onclick="openAuthModal('login')" aria-label="Login or Sign up">
+                    <i class="fas fa-user"></i>
+                    <span>Login / Signup</span>
+                </button>
+                <!-- Logged-in: show user chip with name + logout (hidden by default) -->
+                <div class="user-chip" id="userChip" style="display:none;">
+                    <button class="user-chip-name" onclick="toggleUserMenu()" aria-haspopup="true" aria-expanded="false">
+                        <span class="user-avatar" id="userAvatar">U</span>
+                        <span id="userChipName">User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-menu" id="userMenu">
+                        <div class="user-menu-info">
+                            <span class="user-menu-name" id="userMenuName">User</span>
+                            <span class="user-menu-email" id="userMenuEmail">user@email.com</span>
+                        </div>
+                        <button class="user-menu-logout" onclick="logoutUser()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-toggle" onclick="toggleMobileMenu()">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#home" onclick="toggleMobileMenu()">Home</a>
+        <a href="#about" onclick="toggleMobileMenu()">Our Story</a>
+        <a href="#menu" onclick="toggleMobileMenu()">Menu</a>
+        <a href="#handi" onclick="toggleMobileMenu()">Handi</a>
+        <a href="#reservation" onclick="toggleMobileMenu()">Reserve</a>
+        <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+        <a href="#" onclick="event.preventDefault(); toggleMobileMenu(); openFeedbackModal();">Feedback</a>
+        <a id="mobileAuthLink" onclick="toggleMobileMenu(); openAuthModal('login')"><i class="fas fa-user"></i> Login / Signup</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-bg">
+            <div class="hero-particle" style="--i:1"></div>
+            <div class="hero-particle" style="--i:2"></div>
+            <div class="hero-particle" style="--i:3"></div>
+            <div class="hero-particle" style="--i:4"></div>
+            <div class="hero-particle" style="--i:5"></div>
+            <div class="hero-particle" style="--i:6"></div>
+            <div class="hero-particle" style="--i:7"></div>
+            <div class="hero-particle" style="--i:8"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-star"></i>
+                <span>Top Restaurant in Karmanghat</span>
+                <i class="fas fa-star"></i>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">Experience</span>
+                <span class="title-line accent">Hyderabadi</span>
+                <span class="title-line">Royalty</span>
+            </h1>
+            <p class="hero-subtitle">Authentic flavors from the heart of South India, crafted with centuries-old recipes and presented with modern elegance</p>
+            <div class="hero-cta">
+                <a href="#menu" class="btn-primary">
+                    <span>Explore Menu</span>
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#handi" class="btn-secondary">
+                    <span>Book Handi</span>
+                    <i class="fas fa-utensils"></i>
+                </a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-num">2+</span>
+                    <span class="stat-label">Years of Excellence</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">500K+</span>
+                    <span class="stat-label">Happy Guests</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-num">4.4</span>
+                    <span class="stat-label">Rating</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="section-header">
+            <span class="section-tag">Our Heritage</span>
+            <h2 class="section-title">A Legacy of <span>Flavor</span></h2>
+        </div>
+        <div class="about-grid">
+            <div class="about-card" data-tilt>
+                <div class="about-icon">
+                    <i class="fas fa-utensils"></i>
+                </div>
+                <h3>Authentic Recipes</h3>
+                <p>Passed down through generations, our recipes preserve the true essence of South Indian cuisine</p>
+            </div>
+            <div class="about-card featured" data-tilt>
+                <div class="about-icon">
+                    <i class="fas fa-award"></i>
+                </div>
+                <h3>Award Winning</h3>
+                <p>Recognized among the world's finest restaurants for our commitment to culinary excellence</p>
+                <div class="about-badge">Top Rated</div>
+            </div>
+            <div class="about-card" data-tilt>
+                <div class="about-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <h3>Fresh Ingredients</h3>
+                <p>Hand-picked spices and farm-fresh produce sourced directly from South Indian farms</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" class="menu">
+        <div class="section-header">
+            <span class="section-tag">Culinary Masterpieces</span>
+            <h2 class="section-title">Our <span>Menu</span></h2>
+        </div>
+        <div class="menu-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="soup">Soups</button>
+            <button class="filter-btn" data-filter="veg-starter">Veg Starters</button>
+            <button class="filter-btn" data-filter="nonveg-starter">Non-Veg Starters</button>
+            <button class="filter-btn" data-filter="veg-tandoori">Veg Tandoori</button>
+            <button class="filter-btn" data-filter="nonveg-tandoori">Non-Veg Tandoori</button>
+            <button class="filter-btn" data-filter="tandoori-special">Tandoori Specials</button>
+            <button class="filter-btn" data-filter="veg-curry">Veg Curries</button>
+            <button class="filter-btn" data-filter="egg-curry">Egg Curries</button>
+            <button class="filter-btn" data-filter="nonveg-curry">Non-Veg Curries</button>
+            <button class="filter-btn" data-filter="bread">Indian Breads</button>
+            <button class="filter-btn" data-filter="biryani">Biryani</button>
+            <button class="filter-btn" data-filter="nonveg-biryani">Non-Veg Biryani</button>
+            <button class="filter-btn" data-filter="chinese">Chinese</button>
+            <button class="filter-btn" data-filter="extras">Extras</button>
+        </div>
+        <div class="menu-grid" id="menuGrid"></div>
+    </section>
+
+    <!-- Handi (Bulk) Order Section -->
+    <section id="handi" class="handi-section">
+        <div class="section-header" data-reveal>
+            <span class="section-tag">Handi's</span>
+            <h2 class="section-title">Handi <span>Orders</span></h2>
+            <p class="section-subtitle">Perfect for parties, events &amp; gatherings</p>
+            <p class="handi-intro">Choose your feast — switch between our signature Chicken and Mutton Handi menus.</p>
+            <div class="handi-toggle" role="tablist">
+                <button class="handi-toggle-btn active" data-variant="chicken" onclick="switchHandiVariant('chicken')"><i class="fas fa-drumstick-bite"></i> Chicken Handi</button>
+                <button class="handi-toggle-btn" data-variant="mutton" onclick="switchHandiVariant('mutton')"><i class="fas fa-bacon"></i> Mutton Handi</button>
+            </div>
+        </div>
+        <div class="handi-container" id="handiContainer"></div>
+    </section>
+
+    <section id="reservation" class="reservation">
+        <div class="reservation-bg"></div>
+        <div class="reservation-content">
+            <div class="section-header light">
+                <span class="section-tag">Reserve Your Handi</span>
+                <h2 class="section-title">Book Your <span>Handi</span></h2>
+            </div>
+            <form class="reservation-form" id="reservationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" id="resName" placeholder="Your Name" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="resPhone" placeholder="Phone Number" required>
+                        <i class="fas fa-phone"></i>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="email" id="resEmail" placeholder="Email Address" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="date" id="resDate" required>
+                        <i class="fas fa-calendar"></i>
+                    </div>
+                    <div class="form-group">
+                        <select id="resTime" required>
+                            <option value="">Select Time</option>
+                            <option value="11:00">11:00 AM</option>
+                            <option value="12:00">12:00 PM</option>
+                            <option value="13:00">1:00 PM</option>
+                            <option value="14:00">2:00 PM</option>
+                            <option value="19:00">7:00 PM</option>
+                            <option value="20:00">8:00 PM</option>
+                            <option value="21:00">9:00 PM</option>
+                        </select>
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <select id="resGuests" required>
+                            <option value="">Number of Guests</option>
+                            <option value="30">30 Members</option>
+                            <option value="40">40 Members</option>
+                            <option value="50">50 Members</option>
+                            <option value="50+">50+ Members</option>
+                        </select>
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="resAddress" rows="2" placeholder="Delivery Address for your Handi" required></textarea>
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <select id="resOccasion">
+                            <option value="">Occasion (Optional)</option>
+                            <option value="birthday">Birthday</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="business">Business Dinner</option>
+                            <option value="family">Family Gathering</option>
+                            <option value="date">Date Night</option>
+                        </select>
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <div class="form-group">
+                        <select id="resHandiType" required>
+                            <option value="">Select Handi Type</option>
+                            <option value="Chicken">Chicken Handi</option>
+                            <option value="Mutton">Mutton Handi</option>
+                        </select>
+                        <i class="fas fa-drumstick-bite"></i>
+                    </div>
+                </div>
+                <button type="submit" class="btn-primary btn-large">
+                    <span>Confirm Reservation</span>
+                    <i class="fas fa-check"></i>
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="section-header">
+            <span class="section-tag">Get in Touch</span>
+            <h2 class="section-title">Contact <span>Us</span></h2>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h4>Location</h4>
+                    <p>Galaxy Cafe & Restaurant<br>Karmanghat X Road, Hyderabad<br>Telangana, India - 500079</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-phone"></i>
+                    <h4>Phone</h4>
+                    <p>+91 6300260927</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-envelope"></i>
+                    <h4>Email</h4>
+                    <p>galaxycafegc1@gmail.com</p>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-clock"></i>
+                    <h4>Hours</h4>
+                    <p>Mon-Sun: 12:00 PM - 12:00 AM</p>
+                </div>
+            </div>
+            <div class="contact-map">
+                <iframe src="https://maps.google.com/maps?q=Galaxy%20Cafe%20and%20Restaurant&ll=17.3446689,78.5310432&z=17&output=embed" width="100%" height="100%" style="border:0; border-radius: 20px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Galaxy Cafe and Restaurant location"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Panel (route-based: open via /admin-pannel) -->
+    <div id="adminPanelOverlay" class="admin-panel-overlay">
+        <button class="admin-back-btn" onclick="closeAdminPanel()" title="Back to site">
+            <i class="fas fa-arrow-left"></i> <span>Back to site</span>
+        </button>
+        <div class="admin-login" id="adminLogin">
+            <div class="login-card">
+                <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+                <h2>Admin Portal</h2>
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <input type="text" id="adminUser" placeholder="Username" required>
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="adminPass" placeholder="Password" required>
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <button type="submit" class="btn-primary btn-full">
+                        <span>Login</span>
+                        <i class="fas fa-sign-in-alt"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="admin-dashboard" id="adminDashboard" style="display:none;">
+            <div class="admin-sidebar">
+                <div class="admin-brand">
+                    <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+                    <span>Galaxy Admin</span>
+                </div>
+                <nav class="admin-nav">
+                    <a href="javascript:void(0)" class="admin-nav-item active" data-tab="reservations" onclick="showAdminTab('reservations', this)">
+                        <i class="fas fa-calendar-check"></i> Reservations
+                    </a>
+                    <a href="javascript:void(0)" class="admin-nav-item" data-tab="menu-edit" onclick="showAdminTab('menu-edit', this)">
+                        <i class="fas fa-edit"></i> Edit Menu
+                    </a>
+                    <a href="javascript:void(0)" class="admin-nav-item" data-tab="analytics" onclick="showAdminTab('analytics', this)">
+                        <i class="fas fa-chart-line"></i> Analytics
+                    </a>
+                    <a href="javascript:void(0)" class="admin-nav-item" data-tab="feedback" onclick="showAdminTab('feedback', this)">
+                        <i class="fas fa-comments"></i> Feedback
+                    </a>
+                </nav>
+                <button class="logout-btn" onclick="adminLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+            <div class="admin-main">
+                <div class="admin-header">
+                    <h2 id="adminTitle">Dashboard</h2>
+                    <div class="admin-user">
+                        <span id="adminName">Admin</span>
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                </div>
+                <div class="admin-content" id="adminContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal (Login / Signup / Forgot Password) -->
+    <div class="modal" id="authModal">
+        <div class="modal-content auth-modal-content">
+            <button class="modal-close" onclick="closeAuthModal()" aria-label="Close">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <div class="auth-header">
+                <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+                <h2 id="authTitle">Welcome Back</h2>
+                <p id="authSubtitle">Login to continue with your order</p>
+            </div>
+
+            <!-- Tabs (hidden on the forgot-password view) -->
+            <div class="auth-tabs" id="authTabs">
+                <button type="button" class="auth-tab active" data-form="login" onclick="switchAuthForm('login')">Login</button>
+                <button type="button" class="auth-tab" data-form="signup" onclick="switchAuthForm('signup')">Sign Up</button>
+            </div>
+
+            <div class="auth-error" id="authError"><i class="fas fa-exclamation-circle"></i> <span id="authErrorText"></span></div>
+            <div class="auth-success-msg" id="authSuccess"><i class="fas fa-check-circle"></i> <span id="authSuccessText"></span></div>
+
+            <!-- LOGIN -->
+            <form class="auth-form active" id="loginForm" autocomplete="on">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="loginId" placeholder="Phone number or Email" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+                <div class="auth-forgot">
+                    <a onclick="switchAuthForm('forgot')">Forgot password?</a>
+                </div>
+                <button type="submit" class="btn-primary btn-full">
+                    <span>Login</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+                <p class="auth-switch">New to Galaxy? <a onclick="switchAuthForm('signup')">Create an account</a></p>
+            </form>
+
+            <!-- SIGNUP -->
+            <form class="auth-form" id="signupForm" autocomplete="on">
+                <div class="form-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="signupName" placeholder="Full Name" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-phone"></i>
+                    <input type="tel" id="signupPhone" placeholder="Phone Number" pattern="[0-9+\- ]{7,15}" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="signupEmail" placeholder="Email Address" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupPassword" placeholder="Password (min 6 characters)" minlength="6" required>
+                </div>
+                <div class="form-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="signupConfirm" placeholder="Confirm Password" minlength="6" required>
+                </div>
+                <button type="submit" class="btn-primary btn-full">
+                    <span>Create Account</span>
+                    <i class="fas fa-user-plus"></i>
+                </button>
+                <p class="auth-switch">Already have an account? <a onclick="switchAuthForm('login')">Login</a></p>
+            </form>
+
+            <!-- FORGOT PASSWORD (simulated reset) -->
+            <form class="auth-form" id="forgotForm" autocomplete="off">
+                <div class="form-group">
+                    <i class="fas fa-id-card"></i>
+                    <input type="text" id="forgotId" placeholder="Enter your email or phone" required>
+                </div>
+                <button type="submit" class="btn-primary btn-full">
+                    <span>Send Reset Link</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+                <button type="button" class="auth-back" onclick="switchAuthForm('login')">
+                    <i class="fas fa-arrow-left"></i> Back to login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div class="modal" id="feedbackModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeFeedback()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="feedback-header">
+                <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+                <h2>How was your experience?</h2>
+                <p>Your feedback helps us serve you better</p>
+            </div>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <input type="text" id="feedbackName" placeholder="Your Name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="feedbackPhone" placeholder="Phone Number" pattern="[0-9]{10}" maxlength="10" required>
+                    <i class="fas fa-phone"></i>
+                </div>
+                <div class="rating-stars">
+                    <input type="radio" name="rating" id="star5" value="5"><label for="star5"><i class="fas fa-star"></i></label>
+                    <input type="radio" name="rating" id="star4" value="4"><label for="star4"><i class="fas fa-star"></i></label>
+                    <input type="radio" name="rating" id="star3" value="3"><label for="star3"><i class="fas fa-star"></i></label>
+                    <input type="radio" name="rating" id="star2" value="2"><label for="star2"><i class="fas fa-star"></i></label>
+                    <input type="radio" name="rating" id="star1" value="1"><label for="star1"><i class="fas fa-star"></i></label>
+                </div>
+                <div class="form-group">
+                    <textarea id="feedbackText" placeholder="Tell us about your experience..." rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn-primary btn-full">
+                    <span>Submit Feedback</span>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inbox modal: customer notices (booking confirmed/cancelled by admin) -->
+    <div class="modal" id="inboxModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeInbox()">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="feedback-header">
+                <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+                <h2><i class="fas fa-envelope"></i> Your Inbox</h2>
+                <p>Updates about your Handi bookings</p>
+            </div>
+            <div id="inboxList" class="inbox-list"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <div class="text-logo"><span class="logo-text">GALAXY</span></div>
+                <p>Experience the finest South Indian cuisine in an atmosphere of timeless elegance.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.instagram.com/galaxycafe.hyd/?hl=en" target="_blank" rel="noopener"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#menu">Menu</a>
+                <a href="#reservation">Reservations</a>
+            </div>
+            <div class="footer-links">
+                <h4>Services</h4>
+                <a href="#handi">Bulk / Handi Orders</a>
+                <a href="#reservation">Private Dining</a>
+                <a href="#contact">Catering</a>
+                <a href="#contact">Events</a>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Newsletter</h4>
+                <p>Subscribe for exclusive offers and updates</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+
+                <h4 style="margin-top:30px;">Feedback</h4>
+                <p>We'd love to hear your experience</p>
+                <button type="button" class="footer-feedback-btn" onclick="openFeedbackModal()">
+                    <i class="fas fa-comment-dots"></i> Give Feedback
+                </button>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Galaxy Café & Restaurant. All rights reserved.</p>
+            <p class="footer-tag">Top Restaurant in Karmanghat</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-info-circle"></i>
+        <span id="toastMessage">Notification</span>
+    </div>
+
+    
+<script>
+/* ============================================
+   GALAXY CAFÉ & RESTAURANT - MAIN JAVASCRIPT
+   Handi Booking | Reservations | Admin
+   ============================================ */
+
+// ============================================
+// MENU DATA - Authentic South Indian Items
+// ============================================
+const DISH = "Galaxy%20Cafe%20Dishes/";
+const DISH2 = "Galaxy%20Cafe%20Dishes/Galaxy%20Cafe%20And%20Resturent_/";
+const menuItems = [
+    // ---------- SOUPS ----------
+    { id: 1, name: "Veg Hot & Sour Soup", category: "soup", price: 119, rating: 4.6, veg: true, desc: "Spicy and tangy soup loaded with crunchy vegetables", badge: "", image: "" },
+    { id: 2, name: "Veg Corn Soup", category: "soup", price: 119, rating: 4.5, veg: true, desc: "Creamy sweet corn soup with finely chopped veggies", badge: "", image: "" },
+    { id: 3, name: "Veg Clear Soup", category: "soup", price: 119, rating: 4.4, veg: true, desc: "Light, clear broth with garden-fresh vegetables", badge: "", image: "" },
+    { id: 4, name: "Lemon Coriander Soup", category: "soup", price: 119, rating: 4.6, veg: true, desc: "Refreshing soup with zesty lemon and fresh coriander", badge: "", image: "" },
+    { id: 5, name: "Veg Manchow Soup", category: "soup", price: 119, rating: 4.7, veg: true, desc: "Indo-Chinese favourite topped with crispy fried noodles", badge: "Popular", image: "" },
+    { id: 6, name: "Mint Ginger Soup", category: "soup", price: 119, rating: 4.5, veg: true, desc: "Soothing soup with fresh mint and a ginger kick", badge: "", image: "" },
+    { id: 7, name: "Chicken Corn Soup", category: "soup", price: 159, rating: 4.7, veg: false, desc: "Velvety sweet corn soup with shredded chicken", badge: "", image: "" },
+    { id: 8, name: "Chicken Hot & Sour Soup", category: "soup", price: 159, rating: 4.7, veg: false, desc: "Bold hot and sour broth with tender chicken", badge: "", image: "" },
+    { id: 9, name: "Chicken Clear Soup", category: "soup", price: 159, rating: 4.5, veg: false, desc: "Clear, aromatic chicken broth, light and warming", badge: "", image: "" },
+    { id: 10, name: "Chicken Manchow Soup", category: "soup", price: 159, rating: 4.6, veg: false, desc: "Spicy chicken Manchow soup with crispy noodles", badge: "", image: "" },
+
+    // ---------- VEG STARTERS ----------
+    { id: 11, name: "Veg Manchuria", category: "veg-starter", price: 249, rating: 4.7, veg: true, desc: "Fried veg dumplings tossed in tangy Manchurian sauce", badge: "Popular", image: DISH2 + "Veg%20Manchurian_.jpg" },
+    { id: 12, name: "Panner 65 / Manchuria", category: "veg-starter", price: 259, rating: 4.8, veg: true, desc: "Crispy cottage cheese in spicy 65 or Manchurian style", badge: "Bestseller", image: DISH + "23.png" },
+    { id: 13, name: "Veg Spring Rolls", category: "veg-starter", price: 259, rating: 4.6, veg: true, desc: "Golden rolls stuffed with seasoned vegetables", badge: "", image: "" },
+    { id: 14, name: "Gobi 65 / Manchuria", category: "veg-starter", price: 249, rating: 4.6, veg: true, desc: "Cauliflower florets in fiery 65 or Manchurian glaze", badge: "", image: "" },
+    { id: 15, name: "Panner Majestic", category: "veg-starter", price: 269, rating: 4.7, veg: true, desc: "Royal paneer starter with a rich, spicy coating", badge: "", image: "" },
+    { id: 16, name: "Panner Chilly", category: "veg-starter", price: 269, rating: 4.7, veg: true, desc: "Paneer cubes tossed with peppers in chilli sauce", badge: "", image: DISH2 + "Chilli%20Paneer.jpg" },
+    { id: 17, name: "Mushroom 65", category: "veg-starter", price: 259, rating: 4.5, veg: true, desc: "Spicy deep-fried mushrooms, South-Indian style", badge: "", image: "" },
+    { id: 18, name: "Mushroom Chilly", category: "veg-starter", price: 259, rating: 4.5, veg: true, desc: "Mushrooms wok-tossed with onions and chilli sauce", badge: "", image: "" },
+    { id: 19, name: "Baby Corn 65 / Manchuri", category: "veg-starter", price: 259, rating: 4.5, veg: true, desc: "Crunchy baby corn in spicy 65 or Manchurian sauce", badge: "", image: "" },
+
+    // ---------- NON VEG STARTERS ----------
+    { id: 20, name: "Chilli Chicken", category: "nonveg-starter", price: 309, rating: 4.9, veg: false, desc: "Classic Indo-Chinese chicken tossed in chilli sauce", badge: "Bestseller", image: DISH + "5.png" },
+    { id: 21, name: "Chicken 65 / Manchuria", category: "nonveg-starter", price: 309, rating: 4.9, veg: false, desc: "Iconic spicy fried chicken, 65 or Manchurian style", badge: "Popular", image: DISH + "2.png" },
+    { id: 22, name: "Pepper Chicken", category: "nonveg-starter", price: 339, rating: 4.7, veg: false, desc: "Chicken dry-fried with crushed black pepper", badge: "Spicy", image: "" },
+    { id: 23, name: "Chicken Majestic", category: "nonveg-starter", price: 339, rating: 4.8, veg: false, desc: "Hyderabadi-style boneless chicken with curry leaves", badge: "", image: "" },
+    { id: 24, name: "Chicken 555", category: "nonveg-starter", price: 339, rating: 4.7, veg: false, desc: "House-special spicy chicken starter", badge: "", image: "" },
+    { id: 25, name: "Chicken Drumsticks", category: "nonveg-starter", price: 339, rating: 4.7, veg: false, desc: "Juicy marinated drumsticks, crisp and flavourful", badge: "", image: "" },
+    { id: 26, name: "Apollo Chicken", category: "nonveg-starter", price: 339, rating: 4.7, veg: false, desc: "Tangy, spicy boneless chicken Apollo style", badge: "", image: "" },
+    { id: 27, name: "Ginger Chicken", category: "nonveg-starter", price: 309, rating: 4.6, veg: false, desc: "Chicken wok-tossed with fresh ginger and spices", badge: "", image: "" },
+    { id: 28, name: "Cream Of Fried Chicken", category: "nonveg-starter", price: 359, rating: 4.7, veg: false, desc: "Crispy fried chicken in a creamy spiced glaze", badge: "", image: "" },
+    { id: 29, name: "Chicken Lollipop", category: "nonveg-starter", price: 359, rating: 4.8, veg: false, desc: "Frenched chicken wings in a fiery marinade", badge: "Popular", image: "" },
+    { id: 30, name: "Apollo Fish", category: "nonveg-starter", price: 389, rating: 4.7, veg: false, desc: "Tangy spiced fish fillets, Apollo style", badge: "", image: "" },
+    { id: 31, name: "Fish 555", category: "nonveg-starter", price: 389, rating: 4.6, veg: false, desc: "House-special spicy fish starter", badge: "", image: "" },
+    { id: 32, name: "Chilli Fish / Prawns", category: "nonveg-starter", price: 389, rating: 4.7, veg: false, desc: "Fish or prawns tossed in chilli sauce with peppers", badge: "", image: "" },
+    { id: 33, name: "Fish 65 / Manchuria", category: "nonveg-starter", price: 389, rating: 4.6, veg: false, desc: "Crispy fish in spicy 65 or Manchurian sauce", badge: "", image: "" },
+    { id: 34, name: "Schezwan Fish / Prawns", category: "nonveg-starter", price: 389, rating: 4.7, veg: false, desc: "Fiery Schezwan-tossed fish or prawns", badge: "Spicy", image: "" },
+    { id: 35, name: "Loose Prawns", category: "nonveg-starter", price: 389, rating: 4.7, veg: false, desc: "Spiced shallow-fried prawns, coastal style", badge: "", image: "" },
+
+    // ---------- VEG TANDOORI ----------
+    { id: 36, name: "Panner Tikka", category: "veg-tandoori", price: 309, rating: 4.8, veg: true, desc: "Char-grilled paneer marinated in tandoori spices", badge: "Popular", image: "" },
+    { id: 37, name: "Panner Harabara Tikka", category: "veg-tandoori", price: 309, rating: 4.6, veg: true, desc: "Paneer in a green mint-coriander tandoori marinade", badge: "", image: "" },
+    { id: 38, name: "Panner Malai Tikka", category: "veg-tandoori", price: 309, rating: 4.7, veg: true, desc: "Creamy, mildly spiced char-grilled paneer", badge: "", image: "" },
+
+    // ---------- NON VEG TANDOORI ----------
+    { id: 39, name: "Tandoori Chicken", category: "nonveg-tandoori", price: 429, rating: 4.9, veg: false, desc: "Classic clay-oven chicken (half ₹239 / full ₹429)", badge: "Signature", image: "" },
+    { id: 40, name: "Tangdi Kebab", category: "nonveg-tandoori", price: 429, rating: 4.7, veg: false, desc: "Tandoori chicken legs marinated in spices (half ₹239)", badge: "", image: "" },
+    { id: 41, name: "Chicken Tikka", category: "nonveg-tandoori", price: 399, rating: 4.8, veg: false, desc: "Boneless chicken char-grilled in tandoori masala", badge: "Popular", image: "" },
+    { id: 42, name: "Murg Malai Kebab", category: "nonveg-tandoori", price: 399, rating: 4.7, veg: false, desc: "Creamy, melt-in-mouth grilled chicken kebab", badge: "", image: "" },
+    { id: 43, name: "Chicken Hargoli Kebab", category: "nonveg-tandoori", price: 399, rating: 4.6, veg: false, desc: "Richly spiced chargrilled chicken kebab", badge: "", image: "" },
+    { id: 44, name: "Chicken Reshmi Kebab", category: "nonveg-tandoori", price: 399, rating: 4.7, veg: false, desc: "Silky-soft chicken kebab in a mild marinade", badge: "", image: "" },
+    { id: 45, name: "Grilled Chicken", category: "nonveg-tandoori", price: 429, rating: 4.7, veg: false, desc: "Whole grilled chicken with house spices (half ₹239)", badge: "", image: "" },
+
+    // ---------- TANDOORI SPECIALS ----------
+    { id: 46, name: "Arabian Kebab", category: "tandoori-special", price: 399, rating: 4.7, veg: false, desc: "Middle-Eastern style spiced grilled chicken", badge: "", image: "" },
+    { id: 47, name: "Chicken Lajawab", category: "tandoori-special", price: 479, rating: 4.8, veg: false, desc: "Signature tandoori chicken delicacy (half ₹249)", badge: "Chef's Special", image: "" },
+    { id: 48, name: "Tandoori Mantosh", category: "tandoori-special", price: 479, rating: 4.7, veg: false, desc: "Rich, smoky tandoori specialty (half ₹249)", badge: "", image: "" },
+    { id: 49, name: "Badami Tandoori", category: "tandoori-special", price: 479, rating: 4.7, veg: false, desc: "Almond-marinated tandoori chicken (half ₹249)", badge: "", image: "" },
+
+    // ---------- VEG CURRIES ----------
+    { id: 50, name: "Dal Fry / Dal Tadka", category: "veg-curry", price: 199, rating: 4.6, veg: true, desc: "Yellow lentils tempered with ghee and spices", badge: "", image: "" },
+    { id: 51, name: "Aloo Gobi Masala", category: "veg-curry", price: 249, rating: 4.5, veg: true, desc: "Potato and cauliflower in a spiced onion-tomato gravy", badge: "", image: "" },
+    { id: 52, name: "Mixed Veg Curry", category: "veg-curry", price: 249, rating: 4.5, veg: true, desc: "Seasonal vegetables simmered in a rich masala", badge: "", image: "" },
+    { id: 53, name: "Kadai Veg", category: "veg-curry", price: 249, rating: 4.6, veg: true, desc: "Vegetables cooked kadai-style with bell peppers", badge: "", image: "" },
+    { id: 54, name: "Veg Chat-Pot", category: "veg-curry", price: 249, rating: 4.5, veg: true, desc: "House-special medley of veggies in spicy gravy", badge: "", image: "" },
+    { id: 55, name: "Mushroom Masala", category: "veg-curry", price: 289, rating: 4.6, veg: true, desc: "Button mushrooms in a thick onion-tomato masala", badge: "", image: "" },
+    { id: 56, name: "Palak Panner", category: "veg-curry", price: 289, rating: 4.7, veg: true, desc: "Cottage cheese in a creamy spinach gravy", badge: "Popular", image: "" },
+    { id: 57, name: "Panner Butter Masala", category: "veg-curry", price: 289, rating: 4.8, veg: true, desc: "Paneer in a velvety buttery tomato gravy", badge: "Bestseller", image: "" },
+    { id: 58, name: "Kadai Panner", category: "veg-curry", price: 289, rating: 4.7, veg: true, desc: "Paneer with peppers in spicy kadai masala", badge: "", image: "" },
+    { id: 59, name: "Panner Chat-Pot", category: "veg-curry", price: 289, rating: 4.6, veg: true, desc: "Special paneer curry in a tangy spiced gravy", badge: "", image: "" },
+    { id: 60, name: "Kaju Panner Masala", category: "veg-curry", price: 299, rating: 4.7, veg: true, desc: "Paneer and cashews in a rich creamy masala", badge: "", image: "" },
+    { id: 61, name: "Kaju Masala", category: "veg-curry", price: 299, rating: 4.6, veg: true, desc: "Cashews simmered in a luscious spiced gravy", badge: "", image: "" },
+    { id: 62, name: "Panner Tikka Masala", category: "veg-curry", price: 279, rating: 4.7, veg: true, desc: "Grilled paneer tikka in a smoky tomato gravy", badge: "", image: "" },
+
+    // ---------- EGG CURRIES ----------
+    { id: 63, name: "Egg Masala", category: "egg-curry", price: 199, rating: 4.6, veg: false, desc: "Boiled eggs in a spicy onion-tomato masala", badge: "", image: "" },
+    { id: 64, name: "Egg Bhurji", category: "egg-curry", price: 199, rating: 4.6, veg: false, desc: "Spiced scrambled eggs with onions and chillies", badge: "", image: "" },
+    { id: 65, name: "Egg Curry", category: "egg-curry", price: 199, rating: 4.5, veg: false, desc: "Homestyle boiled-egg curry in a flavourful gravy", badge: "", image: "" },
+
+    // ---------- NON VEG CURRIES ----------
+    { id: 66, name: "Chicken Masala", category: "nonveg-curry", price: 319, rating: 4.8, veg: false, desc: "Classic chicken curry in a rich spiced gravy", badge: "Popular", image: DISH + "29.png" },
+    { id: 67, name: "Methi Chicken", category: "nonveg-curry", price: 319, rating: 4.6, veg: false, desc: "Chicken cooked with aromatic fenugreek leaves", badge: "", image: "" },
+    { id: 68, name: "Dum Ka Chicken", category: "nonveg-curry", price: 319, rating: 4.7, veg: false, desc: "Slow-cooked Hyderabadi dum-style chicken", badge: "", image: "" },
+    { id: 69, name: "Kadai Chicken", category: "nonveg-curry", price: 339, rating: 4.7, veg: false, desc: "Chicken with peppers in a spicy kadai masala", badge: "", image: "" },
+    { id: 70, name: "Butter Chicken B/L", category: "nonveg-curry", price: 339, rating: 4.9, veg: false, desc: "Boneless chicken in a buttery tomato gravy", badge: "Bestseller", image: "" },
+    { id: 71, name: "Telangana Chicken", category: "nonveg-curry", price: 339, rating: 4.7, veg: false, desc: "Fiery Telangana-style country chicken curry", badge: "Spicy", image: "" },
+    { id: 72, name: "Andhra Chicken", category: "nonveg-curry", price: 319, rating: 4.7, veg: false, desc: "Spicy Andhra-style chicken with bold flavours", badge: "Spicy", image: "" },
+    { id: 73, name: "Pujabi Chicken", category: "nonveg-curry", price: 359, rating: 4.7, veg: false, desc: "Robust Punjabi-style chicken curry", badge: "", image: "" },
+    { id: 74, name: "Chicken Afghani", category: "nonveg-curry", price: 339, rating: 4.7, veg: false, desc: "Mild, creamy Afghani-style chicken", badge: "", image: "" },
+    { id: 75, name: "Chicken Moghalai", category: "nonveg-curry", price: 339, rating: 4.7, veg: false, desc: "Royal Mughlai chicken in a rich nutty gravy", badge: "", image: "" },
+
+    // ---------- INDIAN BREADS ----------
+    { id: 76, name: "Tandoori Roti", category: "bread", price: 29, rating: 4.5, veg: true, desc: "Whole-wheat flatbread fresh from the tandoor", badge: "", image: "" },
+    { id: 77, name: "Butter Roti", category: "bread", price: 39, rating: 4.6, veg: true, desc: "Soft tandoori roti brushed with butter", badge: "", image: "" },
+    { id: 78, name: "Rumali Roti", category: "bread", price: 29, rating: 4.5, veg: true, desc: "Paper-thin handkerchief-style soft bread", badge: "", image: "" },
+    { id: 79, name: "Plain Naan", category: "bread", price: 35, rating: 4.5, veg: true, desc: "Classic leavened flatbread from the tandoor", badge: "", image: "" },
+    { id: 80, name: "Butter Naan", category: "bread", price: 39, rating: 4.7, veg: true, desc: "Soft naan generously brushed with butter", badge: "Popular", image: "" },
+    { id: 81, name: "Garlic Naan", category: "bread", price: 49, rating: 4.7, veg: true, desc: "Naan topped with garlic and fresh coriander", badge: "", image: "" },
+    { id: 82, name: "Tandoori Paratha", category: "bread", price: 49, rating: 4.5, veg: true, desc: "Flaky layered paratha baked in the tandoor", badge: "", image: "" },
+    { id: 83, name: "Pudina Paratha", category: "bread", price: 49, rating: 4.5, veg: true, desc: "Layered paratha flavoured with mint", badge: "", image: "" },
+    { id: 84, name: "Aloo Paratha", category: "bread", price: 69, rating: 4.6, veg: true, desc: "Stuffed potato paratha, hearty and spiced", badge: "", image: "" },
+    { id: 85, name: "Masala Kulcha", category: "bread", price: 79, rating: 4.6, veg: true, desc: "Soft kulcha stuffed with spiced filling", badge: "", image: "" },
+    { id: 86, name: "Panner Kulcha", category: "bread", price: 99, rating: 4.6, veg: true, desc: "Kulcha stuffed with spiced cottage cheese", badge: "", image: "" },
+
+    // ---------- BIRYANI ----------
+    { id: 87, name: "Veg Dum Biryani", category: "biryani", price: 309, rating: 4.7, veg: true, desc: "Fragrant basmati dum-cooked with vegetables", badge: "Popular", image: DISH + "25.png" },
+    { id: 88, name: "Mushroom Biryani", category: "biryani", price: 339, rating: 4.6, veg: true, desc: "Aromatic biryani layered with spiced mushrooms", badge: "", image: DISH2 + "Mushroom%20Biryani_.jpg" },
+    { id: 89, name: "Panner Biryani", category: "biryani", price: 339, rating: 4.6, veg: true, desc: "Basmati rice cooked with paneer and spices", badge: "", image: DISH2 + "Paneer%20Biryani.jpg" },
+    { id: 90, name: "Kaju Panner Biryani", category: "biryani", price: 349, rating: 4.7, veg: true, desc: "Rich biryani with cashews and cottage cheese", badge: "", image: DISH + "14.png" },
+    { id: 91, name: "Egg Biryani", category: "biryani", price: 299, rating: 4.6, veg: false, desc: "Spiced basmati biryani with boiled eggs", badge: "", image: DISH + "18.png" },
+
+    // ---------- NON VEG BIRYANI ----------
+    { id: 92, name: "Chicken Biryani", category: "nonveg-biryani", price: 359, rating: 5.0, veg: false, desc: "Signature dum biryani with tender chicken (single ₹199)", badge: "Signature", image: DISH + "3.png" },
+    { id: 93, name: "Chicken 65 Biryani", category: "nonveg-biryani", price: 399, rating: 4.8, veg: false, desc: "Biryani crowned with spicy chicken 65", badge: "Popular", image: DISH + "1.png" },
+    { id: 94, name: "Tandoori / Tangdi Biryani", category: "nonveg-biryani", price: 409, rating: 4.7, veg: false, desc: "Biryani topped with smoky tandoori chicken", badge: "", image: "" },
+    { id: 95, name: "Mutton Biryani", category: "nonveg-biryani", price: 399, rating: 4.9, veg: false, desc: "Slow-cooked dum biryani with tender mutton (single ₹229)", badge: "Premium", image: "" },
+    { id: 96, name: "Mutton Double Gosh", category: "nonveg-biryani", price: 579, rating: 4.8, veg: false, desc: "Loaded biryani with a double portion of mutton", badge: "", image: "" },
+    { id: 97, name: "Nalli Gosh Biryani", category: "nonveg-biryani", price: 529, rating: 4.8, veg: false, desc: "Rich biryani with succulent mutton shanks (single ₹279)", badge: "", image: DISH + "16.png" },
+    { id: 98, name: "Kheema Biryani", category: "nonveg-biryani", price: 499, rating: 4.7, veg: false, desc: "Biryani layered with spiced minced meat", badge: "", image: DISH + "13.png" },
+    { id: 99, name: "Fish Biryani", category: "nonveg-biryani", price: 419, rating: 4.7, veg: false, desc: "Coastal-style biryani with spiced fish", badge: "", image: DISH + "8.png" },
+    { id: 100, name: "Prawns Biryani", category: "nonveg-biryani", price: 419, rating: 4.7, veg: false, desc: "Fragrant biryani with juicy spiced prawns", badge: "", image: DISH + "24.png" },
+    { id: 101, name: "Loli Pop Biryani", category: "nonveg-biryani", price: 399, rating: 4.6, veg: false, desc: "Biryani served with crispy chicken lollipops", badge: "", image: "" },
+
+    // ---------- CHINESE MAIN COURSE ----------
+    { id: 102, name: "Veg Fried Rice / Noodles", category: "chinese", price: 189, rating: 4.6, veg: true, desc: "Wok-tossed rice or noodles with crisp vegetables", badge: "Popular", image: DISH + "26.png" },
+    { id: 103, name: "Mushroom Fried Rice / Noodles", category: "chinese", price: 199, rating: 4.6, veg: true, desc: "Rice or noodles tossed with spiced mushrooms", badge: "", image: DISH + "19.png" },
+    { id: 104, name: "Corn Fried Rice / Noodles", category: "chinese", price: 199, rating: 4.5, veg: true, desc: "Sweet corn fried rice or noodles, wok-tossed", badge: "", image: DISH + "7.png" },
+    { id: 105, name: "Manchuria Fried Rice", category: "chinese", price: 199, rating: 4.6, veg: true, desc: "Fried rice topped with veg Manchurian", badge: "", image: DISH + "10.png" },
+    { id: 106, name: "Veg Schezwan Fried Rice", category: "chinese", price: 209, rating: 4.7, veg: true, desc: "Fiery Schezwan-tossed vegetable fried rice", badge: "Spicy", image: DISH + "28.png" },
+    { id: 107, name: "Egg Fried Rice / Noodles", category: "chinese", price: 199, rating: 4.6, veg: false, desc: "Rice or noodles wok-tossed with egg", badge: "", image: DISH + "9.png" },
+    { id: 108, name: "Chicken Fried Rice / Noodles", category: "chinese", price: 229, rating: 4.8, veg: false, desc: "Rice or noodles tossed with chicken and veggies", badge: "Bestseller", image: DISH + "4.png" },
+    { id: 109, name: "Mixed Non Veg Fried Rice / Noodles", category: "chinese", price: 299, rating: 4.7, veg: false, desc: "Loaded with chicken, egg and prawns", badge: "", image: DISH + "6.png" },
+    { id: 110, name: "Mixed Veg Fried / Noodles", category: "chinese", price: 229, rating: 4.6, veg: true, desc: "Hearty mix of vegetables in rice or noodles", badge: "", image: DISH + "15.png" },
+    { id: 111, name: "Curd Rice", category: "chinese", price: 149, rating: 4.5, veg: true, desc: "Cooling tempered curd rice, comfort in a bowl", badge: "", image: "" },
+
+    // ---------- EXTRAS ----------
+    { id: 112, name: "Plain Curd", category: "extras", price: 50, rating: 4.4, veg: true, desc: "A bowl of fresh, thick curd", badge: "", image: "" },
+    { id: 113, name: "Onion", category: "extras", price: 20, rating: 4.3, veg: true, desc: "Sliced onions with lemon", badge: "", image: "" },
+    { id: 114, name: "Masala Gravy", category: "extras", price: 20, rating: 4.4, veg: true, desc: "Extra serving of spiced masala gravy", badge: "", image: "" },
+    { id: 115, name: "Raitha", category: "extras", price: 20, rating: 4.4, veg: true, desc: "Cooling yogurt with onions and spices", badge: "", image: "" }
+];
+
+// ============================================
+// STATE MANAGEMENT
+// ============================================
+let currentFilter = 'all';
+let adminLoggedIn = false;
+let adminUser = null;
+
+// Reservations are loaded from localStorage so a customer's booking persists
+// and the admin only ever sees real bookings (no demo/seed data).
+const GC_RESERVATIONS_KEY = 'gc_reservations';
+function loadReservations() {
+    try { return JSON.parse(localStorage.getItem(GC_RESERVATIONS_KEY) || '[]'); }
+    catch (e) { return []; }
+}
+function saveReservations() {
+    localStorage.setItem(GC_RESERVATIONS_KEY, JSON.stringify(reservations));
+}
+const reservations = loadReservations();
+
+const feedbacks = [
+    { id: 'FB001', customer: 'Rahul Sharma', phone: '9876543210', rating: 5, text: 'Amazing biryani! Best in Hyderabad!', date: '2026-06-20' },
+    { id: 'FB002', customer: 'Priya Patel', phone: '9123456780', rating: 4, text: 'Great dosa, coffee was perfect.', date: '2026-06-21' },
+    { id: 'FB003', customer: 'Anonymous', phone: '', rating: 5, text: 'The ambiance is world class. Loved it!', date: '2026-06-19' }
+];
+
+// ============================================
+// INITIALIZATION
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    // Hide loader
+    setTimeout(() => {
+        document.getElementById('loading-screen').classList.add('hidden');
+    }, 2000);
+
+    // Render menu
+    renderMenu();
+
+    // Setup event listeners
+    setupEventListeners();
+
+    // Setup customer auth (login state, forms, header chip)
+    setupAuth();
+
+    // Setup navbar scroll
+    setupNavbar();
+
+    // Render Handi plans (chicken by default)
+    initHandi();
+
+    // Setup menu filters
+    setupMenuFilters();
+
+    // Open admin panel if the URL points to the admin route
+    checkAdminRoute();
+});
+
+// ============================================
+// NAVBAR
+// ============================================
+function setupNavbar() {
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Active link on scroll
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 100;
+            if (window.scrollY >= sectionTop) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+}
+
+function toggleMobileMenu() {
+    document.getElementById('mobileMenu').classList.toggle('active');
+}
+
+// ============================================
+// MENU RENDERING
+// ============================================
+function renderMenu() {
+    const grid = document.getElementById('menuGrid');
+    const filtered = currentFilter === 'all'
+        ? menuItems
+        : menuItems.filter(item => item.category === currentFilter);
+
+    const catLabel = {
+        soup: 'Soup', 'veg-starter': 'Veg Starter', 'nonveg-starter': 'Non-Veg Starter',
+        'veg-tandoori': 'Veg Tandoori', 'nonveg-tandoori': 'Non-Veg Tandoori',
+        'tandoori-special': 'Tandoori Special', 'veg-curry': 'Veg Curry',
+        'egg-curry': 'Egg Curry', 'nonveg-curry': 'Non-Veg Curry', bread: 'Indian Bread',
+        biryani: 'Biryani', 'nonveg-biryani': 'Non-Veg Biryani', chinese: 'Chinese', extras: 'Extras'
+    };
+
+    grid.innerHTML = filtered.map(item => `
+        <div class="menu-item" data-category="${item.category}">
+            <div class="menu-item-image">
+                <span class="img-fallback"><i class="fas fa-utensils"></i></span>
+                ${item.image ? `<img src="${item.image}" alt="${item.name}" loading="lazy"
+                     onerror="this.style.display='none'">` : ''}
+                ${item.badge ? `<span class="menu-item-badge">${item.badge}</span>` : ''}
+            </div>
+            <div class="menu-item-content">
+                <div class="menu-item-meta">
+                    <span class="diet-dot ${item.veg ? '' : 'non-veg'}" title="${item.veg ? 'Vegetarian' : 'Non-Vegetarian'}"></span>
+                    <span class="menu-item-category">${catLabel[item.category] || item.category}</span>
+                </div>
+                <div class="menu-item-header">
+                    <h3 class="menu-item-title">${item.name}</h3>
+                    <span class="menu-item-price">₹${item.price}</span>
+                </div>
+                <p class="menu-item-desc">${item.desc}</p>
+                <div class="menu-item-footer">
+                    <div class="menu-item-rating">
+                        ${Array(5).fill(0).map((_, i) =>
+                            `<i class="fas fa-star${i < Math.floor(item.rating) ? '' : '-half-alt'}"></i>`
+                        ).join('')}
+                        <span style="margin-left:5px;color:var(--text-muted);font-size:0.8rem">${item.rating}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function setupMenuFilters() {
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentFilter = btn.dataset.filter;
+            renderMenu();
+        });
+    });
+}
+
+// ============================================
+// CUSTOMER AUTH (Login / Signup / Forgot)
+// --------------------------------------------
+// Static-site auth: accounts live in localStorage under 'gc_users', and the
+// active session under 'gc_current_user'. This is for DEMO/UX only — passwords
+// are NOT securely hashed here. A real system MUST authenticate on a backend
+// and never store raw passwords in the browser.
+// ============================================
+const GC_USERS_KEY = 'gc_users';
+const GC_SESSION_KEY = 'gc_current_user';
+
+// Optional callback to run once the user successfully logs in (e.g. resume payment).
+let pendingAfterLogin = null;
+
+function getUsers() {
+    try { return JSON.parse(localStorage.getItem(GC_USERS_KEY) || '[]'); }
+    catch (e) { return []; }
+}
+function saveUsers(users) {
+    localStorage.setItem(GC_USERS_KEY, JSON.stringify(users));
+}
+function getCurrentUser() {
+    try { return JSON.parse(localStorage.getItem(GC_SESSION_KEY) || 'null'); }
+    catch (e) { return null; }
+}
+function setCurrentUser(user) {
+    if (user) localStorage.setItem(GC_SESSION_KEY, JSON.stringify(user));
+    else localStorage.removeItem(GC_SESSION_KEY);
+}
+function isLoggedIn() {
+    return !!getCurrentUser();
+}
+
+// --- Modal open/close + form switching ---
+function openAuthModal(form) {
+    clearAuthMessages();
+    switchAuthForm(form || 'login');
+    document.getElementById('authModal').classList.add('active');
+}
+function closeAuthModal() {
+    document.getElementById('authModal').classList.remove('active');
+    pendingAfterLogin = null;
+}
+function switchAuthForm(form) {
+    clearAuthMessages();
+    const titles = {
+        login:  ['Welcome Back', 'Login to continue with your order'],
+        signup: ['Create Account', 'Join Galaxy Café for faster checkout'],
+        forgot: ['Reset Password', 'We will send you a reset link']
+    };
+    document.getElementById('authTitle').textContent = titles[form][0];
+    document.getElementById('authSubtitle').textContent = titles[form][1];
+
+    // Tabs are only relevant for login/signup.
+    document.getElementById('authTabs').style.display = (form === 'forgot') ? 'none' : 'flex';
+    document.querySelectorAll('.auth-tab').forEach(t =>
+        t.classList.toggle('active', t.dataset.form === form));
+
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+    const map = { login: 'loginForm', signup: 'signupForm', forgot: 'forgotForm' };
+    document.getElementById(map[form]).classList.add('active');
+}
+
+function showAuthError(msg) {
+    const box = document.getElementById('authError');
+    document.getElementById('authErrorText').textContent = msg;
+    box.classList.add('active');
+    document.getElementById('authSuccess').classList.remove('active');
+}
+function showAuthSuccess(msg) {
+    const box = document.getElementById('authSuccess');
+    document.getElementById('authSuccessText').textContent = msg;
+    box.classList.add('active');
+    document.getElementById('authError').classList.remove('active');
+}
+function clearAuthMessages() {
+    document.getElementById('authError').classList.remove('active');
+    document.getElementById('authSuccess').classList.remove('active');
+}
+
+// --- Signup ---
+function handleSignup(e) {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value.trim();
+    const phone = document.getElementById('signupPhone').value.trim();
+    const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+    const password = document.getElementById('signupPassword').value;
+    const confirm = document.getElementById('signupConfirm').value;
+
+    if (!name || !phone || !email || !password) {
+        return showAuthError('Please fill in all fields.');
+    }
+    if (password.length < 6) {
+        return showAuthError('Password must be at least 6 characters.');
+    }
+    if (password !== confirm) {
+        return showAuthError('Passwords do not match.');
+    }
+
+    const users = getUsers();
+    if (users.some(u => u.email === email)) {
+        return showAuthError('An account with this email already exists.');
+    }
+    if (users.some(u => u.phone === phone)) {
+        return showAuthError('An account with this phone number already exists.');
+    }
+
+    const user = { name, phone, email, password, createdAt: new Date().toISOString() };
+    users.push(user);
+    saveUsers(users);
+
+    // Auto-login the new account.
+    completeLogin(user, 'Account created. Welcome, ' + name.split(' ')[0] + '!');
+    document.getElementById('signupForm').reset();
+}
+
+// --- Login (by phone OR email) ---
+function handleLogin(e) {
+    e.preventDefault();
+    const rawId = document.getElementById('loginId').value.trim();
+    const id = rawId.toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!rawId || !password) {
+        return showAuthError('Please enter your credentials.');
+    }
+
+    // ADMIN LOGIN via the same header form — the client found the separate
+    // URL/path admin portal troublesome, so admin/manager/chef can now sign in
+    // right here. If the username+password match a staff account, open the
+    // admin dashboard instead of the customer session.
+    if (loginAdminFromHeader(rawId, password)) {
+        document.getElementById('loginForm').reset();
+        return;
+    }
+
+    const users = getUsers();
+    const user = users.find(u =>
+        u.email === id || u.phone === rawId);
+
+    if (!user) {
+        return showAuthError('No account found. Please sign up first.');
+    }
+    if (user.password !== password) {
+        return showAuthError('Incorrect password. Please try again.');
+    }
+
+    completeLogin(user, 'Welcome back, ' + user.name.split(' ')[0] + '!');
+    document.getElementById('loginForm').reset();
+}
+
+// Staff credentials (same as the old admin portal). Returns true if the given
+// id/password is an admin and the dashboard was opened.
+const ADMIN_ACCOUNTS = {
+    admin:   'admin123',
+    manager: 'manager123',
+    chef:    'chef123'
+};
+function loginAdminFromHeader(username, password) {
+    const key = username.toLowerCase();
+    if (ADMIN_ACCOUNTS[key] && ADMIN_ACCOUNTS[key] === password) {
+        adminLoggedIn = true;
+        adminUser = key;
+        closeAuthModal();
+        openAdminPanel(); // shows dashboard because adminLoggedIn is now true
+        document.getElementById('adminLogin').style.display = 'none';
+        document.getElementById('adminDashboard').style.display = 'flex';
+        document.getElementById('adminName').textContent = key.charAt(0).toUpperCase() + key.slice(1);
+        showAdminTab('reservations');
+        showToast('Welcome back, ' + key + '!');
+        logStaffActivity(key, 'login');
+        return true;
+    }
+    return false;
+}
+
+// Shared success path for login + signup.
+function completeLogin(user, toastMsg) {
+    setCurrentUser(user);
+    renderAuthState();
+    showToast(toastMsg);
+
+    const resume = pendingAfterLogin;
+    pendingAfterLogin = null;
+    closeAuthModal();
+
+    // Resume any action that required login (e.g. payment).
+    if (typeof resume === 'function') setTimeout(resume, 250);
+}
+
+// --- Forgot password (simulated) ---
+function handleForgot(e) {
+    e.preventDefault();
+    const id = document.getElementById('forgotId').value.trim();
+    if (!id) return showAuthError('Please enter your email or phone.');
+
+    const users = getUsers();
+    const exists = users.some(u =>
+        u.email === id.toLowerCase() || u.phone === id);
+
+    // We show the same confirmation either way (don't leak which accounts exist).
+    showAuthSuccess('If an account exists for "' + id + '", a reset link has been sent.');
+    document.getElementById('forgotForm').reset();
+    if (exists) {
+        console.log('[DEMO] Password reset simulated for', id);
+    }
+}
+
+// --- Logout ---
+function logoutUser() {
+    setCurrentUser(null);
+    renderAuthState();
+    document.getElementById('userChip').classList.remove('open');
+    showToast('You have been logged out.');
+}
+
+// --- Header user menu dropdown ---
+function toggleUserMenu() {
+    const chip = document.getElementById('userChip');
+    const open = chip.classList.toggle('open');
+    chip.querySelector('.user-chip-name').setAttribute('aria-expanded', open ? 'true' : 'false');
+}
+
+// Close the dropdown when clicking outside it.
+document.addEventListener('click', function (e) {
+    const chip = document.getElementById('userChip');
+    if (chip && chip.classList.contains('open') && !chip.contains(e.target)) {
+        chip.classList.remove('open');
+    }
+});
+
+// --- Render logged-in vs logged-out header state (persists across refresh) ---
+function renderAuthState() {
+    const user = getCurrentUser();
+    const authBtn = document.getElementById('authBtn');
+    const userChip = document.getElementById('userChip');
+    const mobileLink = document.getElementById('mobileAuthLink');
+
+    if (user) {
+        authBtn.style.display = 'none';
+        userChip.style.display = 'block';
+        const first = user.name.split(' ')[0];
+        document.getElementById('userChipName').textContent = first;
+        document.getElementById('userAvatar').textContent = (user.name.trim()[0] || 'U').toUpperCase();
+        document.getElementById('userMenuName').textContent = user.name;
+        document.getElementById('userMenuEmail').textContent = user.email;
+        if (mobileLink) mobileLink.innerHTML = '<i class="fas fa-sign-out-alt"></i> Logout (' + first + ')';
+        if (mobileLink) mobileLink.setAttribute('onclick', 'toggleMobileMenu(); logoutUser()');
+    } else {
+        authBtn.style.display = 'inline-flex';
+        userChip.style.display = 'none';
+        userChip.classList.remove('open');
+        if (mobileLink) mobileLink.innerHTML = '<i class="fas fa-user"></i> Login / Signup';
+        if (mobileLink) mobileLink.setAttribute('onclick', "toggleMobileMenu(); openAuthModal('login')");
+    }
+
+    // Inbox button is only meaningful for a logged-in user.
+    const inboxBtn = document.getElementById('inboxBtn');
+    if (inboxBtn) {
+        inboxBtn.style.display = user ? 'inline-flex' : 'none';
+        if (user) updateInboxBadge();
+    }
+}
+
+// Wire up the auth forms (called from DOMContentLoaded).
+function setupAuth() {
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    document.getElementById('signupForm').addEventListener('submit', handleSignup);
+    document.getElementById('forgotForm').addEventListener('submit', handleForgot);
+    renderAuthState();
+    updateInboxBadge();
+}
+
+// ============================================
+// INBOX — admin -> customer booking notices
+// --------------------------------------------
+// When an admin confirms or cancels a Handi booking, updateResStatus() calls
+// notifyUser(), which drops a notice into the customer's Inbox (localStorage).
+// Notices are keyed to the customer by email (falling back to phone) so the
+// right person sees them after they log in. The header mailbox icon shows an
+// unread count, and openInbox() lists the notices and marks them read.
+// FUTURE: also deliver each notice by Email + WhatsApp (see hook in notifyUser).
+// ============================================
+const GC_INBOX_KEY = 'gc_inbox';
+
+function getInbox() {
+    try { return JSON.parse(localStorage.getItem(GC_INBOX_KEY) || '[]'); }
+    catch (e) { return []; }
+}
+
+function saveInbox(list) {
+    localStorage.setItem(GC_INBOX_KEY, JSON.stringify(list));
+}
+
+// The key that ties a notice to a person. Normalised so the admin side (which
+// reads it off the reservation) and the user side (which reads it off the
+// logged-in account) resolve to the same value.
+function inboxKeyFor(emailOrPhone) {
+    return (emailOrPhone || '').trim().toLowerCase();
+}
+
+function currentInboxKey() {
+    const user = getCurrentUser();
+    if (!user) return '';
+    return inboxKeyFor(user.email || user.phone);
+}
+
+// Called from updateResStatus() when an admin confirms/cancels a booking.
+function notifyUser(res, title, body) {
+    const key = inboxKeyFor(res.email || res.phone);
+    if (!key) return;
+    const list = getInbox();
+    list.unshift({
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        userKey: key,
+        title: title,
+        body: body,
+        date: new Date().toISOString(),
+        read: false
+    });
+    saveInbox(list);
+    updateInboxBadge();
+
+    // FUTURE: deliver the same notice through other channels.
+    //   sendEmailNotice(res.email, title, body);
+    //   sendWhatsAppNotice(res.phone, title, body);
+}
+
+function myNotices() {
+    const key = currentInboxKey();
+    if (!key) return [];
+    return getInbox().filter(n => n.userKey === key);
+}
+
+function updateInboxBadge() {
+    const badge = document.getElementById('inboxBadge');
+    if (!badge) return;
+    const unread = myNotices().filter(n => !n.read).length;
+    if (unread > 0) {
+        badge.textContent = unread > 9 ? '9+' : String(unread);
+        badge.style.display = 'flex';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function renderInbox() {
+    const listEl = document.getElementById('inboxList');
+    if (!listEl) return;
+    const notices = myNotices();
+    if (notices.length === 0) {
+        listEl.innerHTML = '<div class="inbox-empty"><i class="fas fa-inbox"></i><p>No messages yet. Booking updates will appear here.</p></div>';
+        return;
+    }
+    listEl.innerHTML = notices.map(n => {
+        const d = new Date(n.date);
+        const when = isNaN(d) ? '' : d.toLocaleString();
+        return `
+            <div class="inbox-item${n.read ? '' : ' unread'}">
+                <div class="inbox-item-head">
+                    <span class="inbox-item-title">${n.title}</span>
+                    <span class="inbox-item-date">${when}</span>
+                </div>
+                <div class="inbox-item-body">${n.body}</div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openInbox() {
+    if (!isLoggedIn()) { openAuthModal('login'); return; }
+    renderInbox();
+    const modal = document.getElementById('inboxModal');
+    if (modal) modal.classList.add('active');
+
+    // Opening the inbox marks the current user's notices as read.
+    const key = currentInboxKey();
+    if (key) {
+        const list = getInbox();
+        list.forEach(n => { if (n.userKey === key) n.read = true; });
+        saveInbox(list);
+        updateInboxBadge();
+    }
+}
+
+function closeInbox() {
+    const modal = document.getElementById('inboxModal');
+    if (modal) modal.classList.remove('active');
+}
+
+// ============================================
+// HANDI (BULK) ORDERS — Chicken & Mutton menus
+// --------------------------------------------
+// Browsing only: each plan's CTA scrolls the user to the Reserve section,
+// where they book a Handi (no cart, no online payment).
+// ============================================
+let currentHandiVariant = 'chicken';
+
+const handiPlans = {
+    chicken: [
+        { key: 'chk30', members: '30 Members', price: 4999, badge: 'Popular', items: ['Chicken Biryani (5kg)', 'Chicken Curry (3kg)', 'Paneer Butter Masala (2kg)', 'Dal Tadka (3kg)', 'Mixed Raita (2kg)', '30 Soft Drinks', '30 Gulab Jamuns'] },
+        { key: 'chk40', members: '40 Members', price: 6499, badge: 'Best Value', featured: true, items: ['Chicken Biryani (7kg)', 'Chicken 65 (3kg)', 'Paneer Tikka (3kg)', 'Dal Tadka (4kg)', 'Mixed Raita (3kg)', '40 Soft Drinks', '40 Gulab Jamuns', '40 Ice Creams'] },
+        { key: 'chk50', members: '50 Members', price: 7999, badge: '', items: ['Chicken Biryani (9kg)', 'Butter Chicken (5kg)', 'Paneer Tikka (4kg)', 'Dal Tadka (5kg)', 'Mixed Raita (4kg)', '50 Soft Drinks', '50 Gulab Jamuns', '50 Ice Creams', 'Welcome Drink'] },
+        { key: 'chk50plus', members: '50+ Members', price: 9999, badge: 'Premium', items: ['Chicken Biryani (12kg)', 'Butter Chicken (7kg)', 'Chicken 65 (4kg)', 'Paneer Tikka (5kg)', 'Dal Tadka (6kg)', 'Mixed Raita (5kg)', 'Unlimited Soft Drinks', 'Assorted Desserts', 'Welcome Drink', 'Live Counter'] }
+    ],
+    mutton: [
+        { key: 'mtn30', members: '30 Members', price: 5999, badge: 'Popular', items: ['Mutton Biryani (5kg)', 'Mutton Curry (3kg)', 'Paneer Butter Masala (2kg)', 'Dal Tadka (3kg)', 'Mixed Raita (2kg)', '30 Soft Drinks', '30 Gulab Jamuns'] },
+        { key: 'mtn40', members: '40 Members', price: 7799, badge: 'Best Value', featured: true, items: ['Mutton Biryani (7kg)', 'Mutton Rogan Josh (4kg)', 'Paneer Tikka (3kg)', 'Dal Tadka (4kg)', 'Mixed Raita (3kg)', '40 Soft Drinks', '40 Gulab Jamuns', '40 Ice Creams'] },
+        { key: 'mtn50', members: '50 Members', price: 9499, badge: '', items: ['Mutton Biryani (9kg)', 'Mutton Rogan Josh (5kg)', 'Mutton Chukka (4kg)', 'Dal Tadka (5kg)', 'Mixed Raita (4kg)', '50 Soft Drinks', '50 Gulab Jamuns', '50 Ice Creams', 'Welcome Drink'] },
+        { key: 'mtn50plus', members: '50+ Members', price: 11499, badge: 'Premium', items: ['Mutton Biryani (12kg)', 'Mutton Rogan Josh (7kg)', 'Mutton Chukka (5kg)', 'Paneer Tikka (5kg)', 'Dal Tadka (6kg)', 'Mixed Raita (5kg)', 'Unlimited Soft Drinks', 'Assorted Desserts', 'Welcome Drink', 'Live Counter'] }
+    ]
+};
+
+function renderHandiPlans(variant) {
+    const container = document.getElementById('handiContainer');
+    if (!container) return;
+    const plans = handiPlans[variant] || [];
+
+    container.innerHTML = plans.map(plan => `
+        <div class="handi-box${plan.featured ? ' featured' : ''}" data-reveal>
+            ${plan.badge ? `<div class="handi-badge${plan.badge === 'Best Value' ? ' best' : ''}">${plan.badge}</div>` : ''}
+            <div class="handi-header">
+                <i class="fas fa-users"></i>
+                <h3>${plan.members}</h3>
+            </div>
+            <div class="handi-price">
+                <span class="currency">₹</span>
+                <span class="amount">${plan.price.toLocaleString('en-IN')}</span>
+            </div>
+            <button class="btn-primary btn-full" onclick="bookHandi()">
+                <span>Book Your Handi</span>
+                <i class="fas fa-calendar-check"></i>
+            </button>
+        </div>
+    `).join('');
+}
+
+function switchHandiVariant(variant) {
+    currentHandiVariant = variant;
+    document.querySelectorAll('.handi-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.variant === variant);
+    });
+    renderHandiPlans(variant);
+}
+
+function initHandi() {
+    switchHandiVariant('chicken');
+}
+
+// CTA on every Handi plan — sends the user to the Reserve section to book.
+function bookHandi() {
+    const target = document.getElementById('reservation');
+    if (target) target.scrollIntoView({ behavior: 'smooth' });
+}
+
+function sendAdminNotification(title, message) {
+    // In production, this would send to backend/websocket
+    console.log('[ADMIN NOTIFICATION]', title, message);
+    // Store in localStorage for demo
+    const notifications = JSON.parse(localStorage.getItem('gc_notifications') || '[]');
+    notifications.push({
+        title,
+        message,
+        time: new Date().toISOString(),
+        read: false
+    });
+    localStorage.setItem('gc_notifications', JSON.stringify(notifications));
+}
+
+// ============================================
+// FEEDBACK SYSTEM
+// ============================================
+function showFeedbackModal() {
+    document.getElementById('feedbackModal').classList.add('active');
+}
+
+// Opens the feedback popup from the footer "Give Feedback" button.
+function openFeedbackModal() {
+    document.getElementById('feedbackModal').classList.add('active');
+}
+
+function closeFeedback() {
+    document.getElementById('feedbackModal').classList.remove('active');
+}
+
+function setupEventListeners() {
+    // Feedback form (popup) — captures name, phone, rating and review.
+    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const name = document.getElementById('feedbackName').value.trim();
+        const phone = document.getElementById('feedbackPhone').value.trim();
+        const rating = document.querySelector('input[name="rating"]:checked');
+        const text = document.getElementById('feedbackText').value.trim();
+
+        if (!rating) {
+            showToast('Please select a rating!');
+            return;
+        }
+
+        feedbacks.unshift({
+            id: 'FB' + Date.now(),
+            customer: name,
+            phone: phone,
+            rating: parseInt(rating.value),
+            text: text || 'No comments',
+            date: new Date().toISOString().split('T')[0]
+        });
+
+        closeFeedback();
+        showToast('Thank you for your feedback!');
+        form.reset();
+    });
+
+    // Reservation form
+    document.getElementById('reservationForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = this;
+        const resData = {
+            id: 'RES' + Date.now(),
+            name: document.getElementById('resName').value,
+            phone: document.getElementById('resPhone').value,
+            email: document.getElementById('resEmail').value,
+            date: document.getElementById('resDate').value,
+            time: document.getElementById('resTime').value,
+            guests: document.getElementById('resGuests').value,
+            address: document.getElementById('resAddress').value,
+            handiType: document.getElementById('resHandiType').value,
+            occasion: document.getElementById('resOccasion').value || 'Regular',
+            status: 'pending'
+        };
+
+        // Saves the reservation and notifies admin. Pulled out so it can run
+        // immediately (logged in) or be resumed right after login.
+        const submitReservation = function() {
+            reservations.unshift(resData);
+            saveReservations();
+            sendAdminNotification('New Reservation', `${resData.name} - ${resData.guests} ${resData.handiType} Handi on ${resData.date}`);
+            showToast('Reservation request submitted! We will confirm shortly.');
+            form.reset();
+        };
+
+        // GATE: customer must be logged in before booking a reservation.
+        if (!isLoggedIn()) {
+            showToast('Please login or sign up to book your reservation.');
+            pendingAfterLogin = submitReservation;
+            openAuthModal('login');
+            return;
+        }
+
+        submitReservation();
+    });
+
+    // Admin login
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('adminUser').value;
+        const password = document.getElementById('adminPass').value;
+
+        if ((username === 'admin' && password === 'admin123') || 
+            (username === 'manager' && password === 'manager123') ||
+            (username === 'chef' && password === 'chef123')) {
+            adminLoggedIn = true;
+            adminUser = username;
+            document.getElementById('adminLogin').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'flex';
+            document.getElementById('adminName').textContent = username.charAt(0).toUpperCase() + username.slice(1);
+            showAdminTab('reservations');
+            showToast('Welcome back, ' + username + '!');
+
+            // Log login
+            logStaffActivity(username, 'login');
+        } else {
+            showToast('Invalid credentials!');
+        }
+    });
+
+    // Newsletter
+    document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        showToast('Subscribed to newsletter!');
+        this.reset();
+    });
+}
+
+// ============================================
+// ADMIN PANEL
+// ============================================
+function showAdminTab(tab, el) {
+    const content = document.getElementById('adminContent');
+    const title = document.getElementById('adminTitle');
+
+    document.querySelectorAll('.admin-nav-item').forEach(item => item.classList.remove('active'));
+    // Prefer the clicked element; fall back to matching the tab so programmatic
+    // calls (e.g. showAdminTab('orders')) still highlight the right item.
+    const active = el
+        ? el.closest('.admin-nav-item')
+        : document.querySelector(`.admin-nav-item[data-tab="${tab}"]`);
+    if (active) active.classList.add('active');
+
+    switch(tab) {
+        case 'reservations':
+            title.textContent = 'Reservations';
+            renderReservations(content);
+            break;
+        case 'menu-edit':
+            title.textContent = 'Edit Menu';
+            renderMenuEdit(content);
+            break;
+        case 'analytics':
+            title.textContent = 'Analytics Dashboard';
+            renderAnalytics(content);
+            break;
+        case 'feedback':
+            title.textContent = 'Customer Feedback';
+            renderFeedback(content);
+            break;
+    }
+}
+
+function renderReservations(container) {
+    container.innerHTML = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-card-value">${reservations.length}</div>
+                <div class="stat-card-label">Total Reservations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-card-value">${reservations.reduce((s, r) => s + (parseInt(r.guests) || 0), 0)}</div>
+                <div class="stat-card-label">Total Handi (Members)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-clock"></i></div>
+                <div class="stat-card-value">${reservations.filter(r => r.status === 'pending').length}</div>
+                <div class="stat-card-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-glass-cheers"></i></div>
+                <div class="stat-card-value">${reservations.filter(r => r.occasion !== 'Regular').length}</div>
+                <div class="stat-card-label">Special Events</div>
+            </div>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Date/Time</th>
+                    <th>Handi</th>
+                    <th>Type</th>
+                    <th>Address</th>
+                    <th>Occasion</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${reservations.map(res => `
+                    <tr>
+                        <td style="color:var(--gold);">${res.id}</td>
+                        <td>${res.name}</td>
+                        <td>${res.phone}</td>
+                        <td>${res.email ? res.email : '<span style="color:var(--text-muted);">—</span>'}</td>
+                        <td>${res.date}<br><small>${res.time}</small></td>
+                        <td>${res.guests}</td>
+                        <td>${res.handiType ? res.handiType : '<span style="color:var(--text-muted);">—</span>'}</td>
+                        <td>${res.address ? res.address : '<span style="color:var(--text-muted);">—</span>'}</td>
+                        <td>${res.occasion}</td>
+                        <td><span class="status-badge status-${res.status}">${res.status}</span></td>
+                        <td>
+                            <button onclick="updateResStatus('${res.id}')" style="background:var(--gold);color:var(--black);border:none;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:0.8rem;">
+                                Update
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+function renderMenuEdit(container) {
+    container.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h3 style="color:var(--white);">Menu Items</h3>
+            <button onclick="addNewItem()" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600;">
+                <i class="fas fa-plus"></i> Add Item
+            </button>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${menuItems.map(item => `
+                    <tr>
+                        <td>${item.id}</td>
+                        <td style="color:var(--white);font-weight:600;">${item.name}</td>
+                        <td><span class="status-badge status-confirmed">${item.category}</span></td>
+                        <td style="color:var(--gold);font-weight:600;">₹${item.price}</td>
+                        <td>${item.rating} <i class="fas fa-star" style="color:var(--gold);font-size:0.7rem;"></i></td>
+                        <td>
+                            <button onclick="editItem(${item.id})" style="background:var(--success);color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;margin-right:5px;font-size:0.8rem;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteItem(${item.id})" style="background:var(--danger);color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:0.8rem;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+function renderAnalytics(container) {
+    const totalMembers = reservations.reduce((s, r) => s + (parseInt(r.guests) || 0), 0);
+    const confirmedCount = reservations.filter(r => r.status === 'confirmed').length;
+
+    container.innerHTML = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-calendar-check"></i></div>
+                <div class="stat-card-value">${reservations.length}</div>
+                <div class="stat-card-label">Total Bookings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-users"></i></div>
+                <div class="stat-card-value">${totalMembers}</div>
+                <div class="stat-card-label">Total Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-check-circle"></i></div>
+                <div class="stat-card-value">${confirmedCount}</div>
+                <div class="stat-card-label">Confirmed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-smile"></i></div>
+                <div class="stat-card-value">${feedbacks.length > 0 ? (feedbacks.reduce((s, f) => s + f.rating, 0) / feedbacks.length).toFixed(1) : '0'}</div>
+                <div class="stat-card-label">Avg Rating</div>
+            </div>
+        </div>
+        <div style="background:var(--black-light);padding:30px;border-radius:16px;margin-top:20px;border:1px solid var(--black-lighter);">
+            <h3 style="color:var(--white);margin-bottom:20px;">Popular Items</h3>
+            <div style="display:flex;flex-direction:column;gap:15px;">
+                ${menuItems.sort((a, b) => b.rating - a.rating).slice(0, 5).map((item, i) => `
+                    <div style="display:flex;align-items:center;gap:15px;">
+                        <span style="color:var(--gold);font-weight:700;width:25px;">${i + 1}</span>
+                        <div style="flex:1;">
+                            <div style="color:var(--white);font-weight:600;">${item.name}</div>
+                            <div style="color:var(--text-muted);font-size:0.8rem;">${item.category}</div>
+                        </div>
+                        <div style="color:var(--gold);font-weight:700;">★ ${item.rating}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+function renderFeedback(container) {
+    container.innerHTML = `
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-comments"></i></div>
+                <div class="stat-card-value">${feedbacks.length}</div>
+                <div class="stat-card-label">Total Reviews</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-icon"><i class="fas fa-star"></i></div>
+                <div class="stat-card-value">${feedbacks.length > 0 ? (feedbacks.reduce((s, f) => s + f.rating, 0) / feedbacks.length).toFixed(1) : '0'}</div>
+                <div class="stat-card-label">Average Rating</div>
+            </div>
+        </div>
+        <div style="margin-top:20px;display:flex;flex-direction:column;gap:15px;">
+            ${feedbacks.map(fb => `
+                <div style="background:var(--black-light);padding:20px;border-radius:12px;border:1px solid var(--black-lighter);">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+                        <span style="color:var(--white);font-weight:600;">${fb.customer}${fb.phone ? ` <span style="color:var(--text-muted);font-weight:400;font-size:0.8rem;"><i class="fas fa-phone-alt" style="font-size:0.7rem;"></i> ${fb.phone}</span>` : ''}</span>
+                        <span style="color:var(--text-muted);font-size:0.8rem;">${fb.date}</span>
+                    </div>
+                    <div style="color:var(--gold);margin-bottom:10px;">
+                        ${Array(5).fill(0).map((_, i) => `<i class="fas fa-star${i < fb.rating ? '' : ' text-muted'}"></i>`).join('')}
+                    </div>
+                    <p style="color:var(--text-muted);font-size:0.9rem;">${fb.text}</p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// Admin Actions
+function updateResStatus(resId) {
+    const res = reservations.find(r => r.id === resId);
+    if (res) {
+        const statuses = ['pending', 'confirmed', 'cancelled'];
+        const currentIndex = statuses.indexOf(res.status);
+        res.status = statuses[(currentIndex + 1) % statuses.length];
+        saveReservations();
+        showToast(`Reservation ${resId} updated to ${res.status}`);
+
+        // Notify the customer in their Inbox when the booking is confirmed or
+        // cancelled. (Future: also deliver via Email + WhatsApp — see notifyUser.)
+        if (res.status === 'confirmed') {
+            notifyUser(res, 'Booking Confirmed', 'Your Booking order is confirmed.');
+        } else if (res.status === 'cancelled') {
+            notifyUser(res, 'Booking Cancelled', 'We are Sorry to cancelled your booking order we will contact you soon.');
+        }
+
+        renderReservations(document.getElementById('adminContent'));
+    }
+}
+
+function editItem(itemId) {
+    const item = menuItems.find(i => i.id === itemId);
+    if (item) {
+        const newPrice = prompt('Enter new price for ' + item.name + ':', item.price);
+        if (newPrice && !isNaN(newPrice)) {
+            item.price = parseInt(newPrice);
+            showToast(`${item.name} price updated to ₹${item.price}`);
+            renderMenuEdit(document.getElementById('adminContent'));
+            renderMenu();
+        }
+    }
+}
+
+function deleteItem(itemId) {
+    if (confirm('Are you sure you want to delete this item?')) {
+        const index = menuItems.findIndex(i => i.id === itemId);
+        if (index > -1) {
+            menuItems.splice(index, 1);
+            showToast('Item deleted successfully');
+            renderMenuEdit(document.getElementById('adminContent'));
+            renderMenu();
+        }
+    }
+}
+
+function addNewItem() {
+    const name = prompt('Enter item name:');
+    if (!name) return;
+    const price = prompt('Enter price:');
+    if (!price || isNaN(price)) return;
+    const category = prompt('Enter category (breakfast/main/dessert/beverage):', 'main');
+
+    const newItem = {
+        id: Math.max(...menuItems.map(i => i.id)) + 1,
+        name,
+        category: category || 'main',
+        price: parseInt(price),
+        rating: 4.5,
+        desc: 'New menu item',
+        badge: 'New'
+    };
+    menuItems.push(newItem);
+    showToast(`${name} added to menu!`);
+    renderMenuEdit(document.getElementById('adminContent'));
+    renderMenu();
+}
+
+function logStaffActivity(name, action) {
+    const logs = JSON.parse(localStorage.getItem('gc_staff_logs') || '[]');
+    logs.push({
+        name,
+        action,
+        timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('gc_staff_logs', JSON.stringify(logs));
+}
+
+function adminLogout() {
+    if (adminUser) {
+        logStaffActivity(adminUser, 'logout');
+    }
+    adminLoggedIn = false;
+    adminUser = null;
+    document.getElementById('adminLogin').style.display = 'flex';
+    document.getElementById('adminDashboard').style.display = 'none';
+    document.getElementById('adminLoginForm').reset();
+    closeAdminPanel(); // close the overlay and return to the site
+    showToast('Logged out successfully');
+}
+
+// ============================================
+// ADMIN ROUTING  ( open via /admin-pannel )
+// --------------------------------------------
+// The admin panel is no longer a visible page section — it is a full-screen
+// overlay that opens only when the URL points to the admin route. On a static
+// host that can't do real path routing, we also accept #admin-pannel and
+// ?admin=1 so the same link works everywhere.
+// ============================================
+function isAdminRoute() {
+    const path = window.location.pathname.toLowerCase();
+    const hash = window.location.hash.toLowerCase();
+    const params = new URLSearchParams(window.location.search);
+    // Accept both spellings: /admin-panel and /admin-pannel (with optional trailing slash)
+    if (/\/admin-pann?el\/?$/.test(path)) return true;
+    if (hash === '#admin-panel' || hash === '#admin-pannel') return true;
+    if (params.get('admin') === '1') return true;
+    return false;
+}
+
+function openAdminPanel() {
+    const overlay = document.getElementById('adminPanelOverlay');
+    if (!overlay) return;
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Show the right screen depending on whether someone is already logged in.
+    document.getElementById('adminLogin').style.display = adminLoggedIn ? 'none' : 'flex';
+    document.getElementById('adminDashboard').style.display = adminLoggedIn ? 'flex' : 'none';
+}
+
+function closeAdminPanel() {
+    const overlay = document.getElementById('adminPanelOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('active');
+    document.body.style.overflow = '';
+    // Strip the admin route from the URL so a refresh returns to the site.
+    const cleanPath = window.location.pathname.replace(/\/admin-pann?el\/?$/i, '/');
+    history.replaceState(null, '', cleanPath);
+}
+
+function checkAdminRoute() {
+    if (isAdminRoute()) {
+        openAdminPanel();
+    } else {
+        const overlay = document.getElementById('adminPanelOverlay');
+        if (overlay && overlay.classList.contains('active')) closeAdminPanel();
+    }
+}
+
+window.addEventListener('hashchange', checkAdminRoute);
+window.addEventListener('popstate', checkAdminRoute);
+
+
+// ============================================
+// TOAST NOTIFICATION
+// ============================================
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    toastMessage.textContent = message;
+    toast.classList.add('active');
+
+    setTimeout(() => {
+        toast.classList.remove('active');
+    }, 3000);
+}
+
+// ============================================
+// 3D TILT EFFECT (Simple implementation)
+// ============================================
+document.addEventListener('mousemove', (e) => {
+    const cards = document.querySelectorAll('[data-tilt]');
+    cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+
+        if (x >= 0 && x <= rect.width && y >= 0 && y <= rect.height) {
+            card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px)`;
+        } else {
+            card.style.transform = '';
+        }
+    });
+});
+</script>
+<script>
+
+// Smooth scrolling for all anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+            e.preventDefault();
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+            // Close mobile menu if open
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenu && mobileMenu.classList.contains('active')) {
+                mobileMenu.classList.remove('active');
+            }
+        }
+    });
+});
+
+</script>
+</body>
+</html>
