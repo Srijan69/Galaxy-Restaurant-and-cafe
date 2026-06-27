@@ -3529,7 +3529,11 @@ html {
         <span id="toastMessage">Notification</span>
     </div>
 
-    
+
+<!-- Supabase JS client (must load BEFORE the app script below) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Supabase URL + anon key live here, separate from app logic -->
+<script src="supabase-config.js"></script>
 <script>
 /* ============================================
    GALAXY CAFÉ & RESTAURANT - MAIN JAVASCRIPT
@@ -3693,8 +3697,17 @@ let currentFilter = 'all';
 let adminLoggedIn = false;
 let adminUser = null;
 
-// Reservations are loaded from localStorage so a customer's booking persists
-// and the admin only ever sees real bookings (no demo/seed data).
+// ============================================
+// SUPABASE-BACKED STATE
+// These caches are filled from Supabase on load and refreshed after each write.
+// (Previously: reservations came from localStorage, feedbacks were seed data.)
+// ============================================
+let reservations = [];
+let feedbacks = [];
+let orders = [];
+
+// Legacy localStorage fallback kept only so older bookings still appear if
+// Supabase is briefly unreachable. New writes go to Supabase.
 const GC_RESERVATIONS_KEY = 'gc_reservations';
 function loadReservations() {
     try { return JSON.parse(localStorage.getItem(GC_RESERVATIONS_KEY) || '[]'); }
@@ -3703,13 +3716,125 @@ function loadReservations() {
 function saveReservations() {
     localStorage.setItem(GC_RESERVATIONS_KEY, JSON.stringify(reservations));
 }
-const reservations = loadReservations();
 
-const feedbacks = [
-    { id: 'FB001', customer: 'Rahul Sharma', phone: '9876543210', rating: 5, text: 'Amazing biryani! Best in Hyderabad!', date: '2026-06-20' },
-    { id: 'FB002', customer: 'Priya Patel', phone: '9123456780', rating: 4, text: 'Great dosa, coffee was perfect.', date: '2026-06-21' },
-    { id: 'FB003', customer: 'Anonymous', phone: '', rating: 5, text: 'The ambiance is world class. Loved it!', date: '2026-06-19' }
-];
+// ============================================
+// SUPABASE DATA HELPERS
+// Each returns data normalized to the shape the render functions already expect.
+// ============================================
+function sbReady() {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) {
+        console.error('[Supabase] client not available. Check supabase-config.js and the CDN <script> order.');
+        return false;
+    }
+    return true;
+}
+
+// Runs once on load: a cheap query that proves URL + key + RLS are working.
+async function testSupabaseConnection() {
+    if (!sbReady()) { showToast('⚠️ Supabase not configured'); return false; }
+    const { error } = await supabaseClient
+        .from('reservations').select('id', { count: 'exact', head: true });
+    if (error) {
+        console.error('[Supabase] connection test failed:', error);
+        showToast('⚠️ Supabase error: ' + error.message);
+        return false;
+    }
+    showToast('✅ Connected to Supabase');
+    return true;
+}
+
+// ---- RESERVATIONS ----
+async function fetchReservations() {
+    if (!sbReady()) return reservations;
+    const { data, error } = await supabaseClient
+        .from('reservations').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); showToast('Could not load reservations'); return reservations; }
+    reservations = data.map(r => ({
+        id: r.id, name: r.name, phone: r.phone, email: r.email,
+        date: r.date, time: r.time, guests: r.guests,
+        occasion: r.occasion || 'Regular', handiType: r.handi_type,
+        address: r.address, status: r.status
+    }));
+    return reservations;
+}
+
+async function createReservation(payload) {
+    if (!sbReady()) return null;
+    const { data, error } = await supabaseClient
+        .from('reservations').insert([{
+            name: payload.name, phone: payload.phone, email: payload.email,
+            date: payload.date, time: payload.time, guests: payload.guests,
+            occasion: payload.occasion, handi_type: payload.handiType,
+            address: payload.address, status: 'pending'
+        }]).select().single();
+    if (error) { console.error(error); showToast('Reservation failed: ' + error.message); return null; }
+    return data;
+}
+
+async function updateReservationStatusDb(id, status) {
+    if (!sbReady()) return null;
+    const { error } = await supabaseClient.from('reservations').update({ status }).eq('id', id);
+    if (error) { console.error(error); showToast('Update failed: ' + error.message); return null; }
+    return true;
+}
+
+// ---- FEEDBACKS ----
+async function fetchFeedbacks() {
+    if (!sbReady()) return feedbacks;
+    const { data, error } = await supabaseClient
+        .from('feedbacks').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); showToast('Could not load feedback'); return feedbacks; }
+    feedbacks = data.map(f => ({
+        id: f.id, customer: f.customer, phone: f.phone, rating: f.rating,
+        text: f.text, date: (f.created_at || '').split('T')[0]
+    }));
+    return feedbacks;
+}
+
+async function createFeedback(payload) {
+    if (!sbReady()) return null;
+    const { data, error } = await supabaseClient
+        .from('feedbacks').insert([{
+            customer: payload.customer, phone: payload.phone,
+            rating: payload.rating, text: payload.text
+        }]).select().single();
+    if (error) { console.error(error); showToast('Could not submit feedback: ' + error.message); return null; }
+    return data;
+}
+
+// ---- ORDERS (helpers ready for the cart/checkout flow) ----
+async function fetchOrders() {
+    if (!sbReady()) return orders;
+    const { data, error } = await supabaseClient
+        .from('orders').select('*').order('created_at', { ascending: false });
+    if (error) { console.error(error); showToast('Could not load orders'); return orders; }
+    orders = data.map(o => ({
+        id: o.id, customer: o.customer, items: o.items, total: Number(o.total),
+        status: o.status, paymentMethod: o.payment_method, paymentId: o.payment_id,
+        date: (o.created_at || '').split('T')[0],
+        time: new Date(o.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+    }));
+    return orders;
+}
+
+async function createOrder(payload) {
+    if (!sbReady()) return null;
+    const { data, error } = await supabaseClient
+        .from('orders').insert([{
+            customer: payload.customer, items: payload.items, total: payload.total,
+            status: payload.status, payment_method: payload.paymentMethod,
+            payment_id: payload.paymentId || null
+        }]).select().single();
+    if (error) { console.error(error); showToast('Could not save order: ' + error.message); return null; }
+    return data;
+}
+
+async function updateOrderStatusDb(id, status) {
+    if (!sbReady()) return null;
+    const { error } = await supabaseClient.from('orders').update({ status }).eq('id', id);
+    if (error) { console.error(error); showToast('Update failed: ' + error.message); return null; }
+    return true;
+}
 
 // ============================================
 // INITIALIZATION
@@ -3740,6 +3865,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Open admin panel if the URL points to the admin route
     checkAdminRoute();
+
+    // Verify Supabase connection, then warm the data caches (non-blocking).
+    testSupabaseConnection().then(ok => {
+        if (ok) {
+            Promise.all([fetchReservations(), fetchFeedbacks(), fetchOrders()])
+                .catch(err => console.error('Initial Supabase load failed:', err));
+        }
+    });
 });
 
 // ============================================
@@ -4329,7 +4462,7 @@ function closeFeedback() {
 
 function setupEventListeners() {
     // Feedback form (popup) — captures name, phone, rating and review.
-    document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+    document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const form = this;
         const name = document.getElementById('feedbackName').value.trim();
@@ -4342,18 +4475,25 @@ function setupEventListeners() {
             return;
         }
 
-        feedbacks.unshift({
-            id: 'FB' + Date.now(),
-            customer: name,
-            phone: phone,
+        const btn = form.querySelector('button[type="submit"]');
+        const original = btn ? btn.innerHTML : '';
+        if (btn) { btn.disabled = true; btn.innerHTML = '<span>Submitting...</span> <i class="fas fa-spinner fa-spin"></i>'; }
+
+        const saved = await createFeedback({
+            customer: name || 'Guest',
+            phone: phone || null,
             rating: parseInt(rating.value),
-            text: text || 'No comments',
-            date: new Date().toISOString().split('T')[0]
+            text: text || 'No comments'
         });
 
-        closeFeedback();
-        showToast('Thank you for your feedback!');
-        form.reset();
+        if (btn) { btn.disabled = false; btn.innerHTML = original; }
+
+        if (saved) {
+            await fetchFeedbacks();
+            closeFeedback();
+            showToast('Thank you for your feedback!');
+            form.reset();
+        }
     });
 
     // Reservation form
@@ -4361,7 +4501,6 @@ function setupEventListeners() {
         e.preventDefault();
         const form = this;
         const resData = {
-            id: 'RES' + Date.now(),
             name: document.getElementById('resName').value,
             phone: document.getElementById('resPhone').value,
             email: document.getElementById('resEmail').value,
@@ -4374,11 +4513,19 @@ function setupEventListeners() {
             status: 'pending'
         };
 
-        // Saves the reservation and notifies admin. Pulled out so it can run
-        // immediately (logged in) or be resumed right after login.
-        const submitReservation = function() {
-            reservations.unshift(resData);
-            saveReservations();
+        // Saves the reservation to Supabase and notifies admin. Pulled out so it
+        // can run immediately (logged in) or be resumed right after login.
+        const submitReservation = async function() {
+            const btn = form.querySelector('button[type="submit"]');
+            const original = btn ? btn.innerHTML : '';
+            if (btn) { btn.disabled = true; btn.innerHTML = '<span>Submitting...</span> <i class="fas fa-spinner fa-spin"></i>'; }
+
+            const saved = await createReservation(resData);
+
+            if (btn) { btn.disabled = false; btn.innerHTML = original; }
+            if (!saved) return;
+
+            await fetchReservations();
             sendAdminNotification('New Reservation', `${resData.name} - ${resData.guests} ${resData.handiType} Handi on ${resData.date}`);
             showToast('Reservation request submitted! We will confirm shortly.');
             form.reset();
@@ -4430,7 +4577,7 @@ function setupEventListeners() {
 // ============================================
 // ADMIN PANEL
 // ============================================
-function showAdminTab(tab, el) {
+async function showAdminTab(tab, el) {
     const content = document.getElementById('adminContent');
     const title = document.getElementById('adminTitle');
 
@@ -4442,9 +4589,13 @@ function showAdminTab(tab, el) {
         : document.querySelector(`.admin-nav-item[data-tab="${tab}"]`);
     if (active) active.classList.add('active');
 
+    const loading = '<p style="text-align:center;color:var(--text-muted);padding:40px;"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+
     switch(tab) {
         case 'reservations':
             title.textContent = 'Reservations';
+            content.innerHTML = loading;
+            await fetchReservations();
             renderReservations(content);
             break;
         case 'menu-edit':
@@ -4453,10 +4604,14 @@ function showAdminTab(tab, el) {
             break;
         case 'analytics':
             title.textContent = 'Analytics Dashboard';
+            content.innerHTML = loading;
+            await Promise.all([fetchReservations(), fetchFeedbacks()]);
             renderAnalytics(content);
             break;
         case 'feedback':
             title.textContent = 'Customer Feedback';
+            content.innerHTML = loading;
+            await fetchFeedbacks();
             renderFeedback(content);
             break;
     }
@@ -4646,25 +4801,28 @@ function renderFeedback(container) {
 }
 
 // Admin Actions
-function updateResStatus(resId) {
+async function updateResStatus(resId) {
     const res = reservations.find(r => r.id === resId);
-    if (res) {
-        const statuses = ['pending', 'confirmed', 'cancelled'];
-        const currentIndex = statuses.indexOf(res.status);
-        res.status = statuses[(currentIndex + 1) % statuses.length];
-        saveReservations();
-        showToast(`Reservation ${resId} updated to ${res.status}`);
+    if (!res) return;
+    const statuses = ['pending', 'confirmed', 'cancelled'];
+    const next = statuses[(statuses.indexOf(res.status) + 1) % statuses.length];
 
-        // Notify the customer in their Inbox when the booking is confirmed or
-        // cancelled. (Future: also deliver via Email + WhatsApp — see notifyUser.)
-        if (res.status === 'confirmed') {
-            notifyUser(res, 'Booking Confirmed', 'Your Booking order is confirmed.');
-        } else if (res.status === 'cancelled') {
-            notifyUser(res, 'Booking Cancelled', 'We are Sorry to cancelled your booking order we will contact you soon.');
-        }
+    const ok = await updateReservationStatusDb(resId, next);
+    if (!ok) return;
 
-        renderReservations(document.getElementById('adminContent'));
+    res.status = next;
+    showToast(`Reservation updated to ${next}`);
+
+    // Notify the customer in their Inbox when the booking is confirmed or
+    // cancelled. (Future: also deliver via Email + WhatsApp — see notifyUser.)
+    if (next === 'confirmed') {
+        notifyUser(res, 'Booking Confirmed', 'Your Booking order is confirmed.');
+    } else if (next === 'cancelled') {
+        notifyUser(res, 'Booking Cancelled', 'We are Sorry to cancelled your booking order we will contact you soon.');
     }
+
+    await fetchReservations();
+    renderReservations(document.getElementById('adminContent'));
 }
 
 function editItem(itemId) {
