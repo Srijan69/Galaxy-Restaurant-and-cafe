@@ -7,6 +7,8 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Cormorant+Garamond:wght@300;400;500;600;700&family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- 3D Cinematic Intro (self-contained, does not affect site styles) -->
+    <link rel="stylesheet" href="galaxy-intro.css">
 <style>
 /* ============================================
    GALAXY CAFÉ & RESTAURANT - WORLD CLASS STYLES
@@ -82,66 +84,6 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--gold-light);
-}
-
-/* ============================================
-   LOADING SCREEN
-   ============================================ */
-#loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--black);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10000;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-}
-
-#loading-screen.hidden {
-    opacity: 0;
-    visibility: hidden;
-}
-
-.loader-content {
-    text-align: center;
-}
-
-.loader-logo {
-    width: 200px;
-    height: auto;
-    margin-bottom: 30px;
-    animation: loaderPulse 2s ease-in-out infinite;
-}
-
-@keyframes loaderPulse {
-    0%, 100% { opacity: 0.6; transform: scale(0.98); }
-    50% { opacity: 1; transform: scale(1.02); }
-}
-
-.loader-line {
-    width: 150px;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 0 auto 20px;
-    animation: loaderLine 1.5s ease-in-out infinite;
-}
-
-@keyframes loaderLine {
-    0% { width: 0; opacity: 0; }
-    50% { width: 150px; opacity: 1; }
-    100% { width: 0; opacity: 0; }
-}
-
-.loader-text {
-    color: var(--gold);
-    font-family: var(--font-elegant);
-    font-size: 1.1rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
 }
 
 /* ============================================
@@ -2949,13 +2891,13 @@ html {
 </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="loader-content">
-            <div class="text-logo"><span class="logo-text">GALAXY</span></div>
-            <div class="loader-line"></div>
-            <p class="loader-text">Preparing Your Experience</p>
-        </div>
+    <!-- ===== 3D Cinematic Intro Overlay (additive; auto-removes after play) ===== -->
+    <div id="galaxy-intro">
+        <canvas id="galaxy-intro-canvas"></canvas>
+        <p id="galaxy-intro-caption">Galaxy Café &amp; Restaurant</p>
+        <button id="galaxy-intro-skip" type="button" aria-label="Skip intro">
+            Skip Intro <i class="fas fa-forward"></i>
+        </button>
     </div>
 
     <!-- Navigation -->
@@ -3840,11 +3782,6 @@ async function updateOrderStatusDb(id, status) {
 // INITIALIZATION
 // ============================================
 document.addEventListener('DOMContentLoaded', function() {
-    // Hide loader
-    setTimeout(() => {
-        document.getElementById('loading-screen').classList.add('hidden');
-    }, 2000);
-
     // Render menu
     renderMenu();
 
@@ -3857,7 +3794,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Setup navbar scroll
     setupNavbar();
 
-    // Render Handi plans (chicken by default)
+    // Apply any admin price/rating overrides, then render Handi plans (chicken by default)
+    applyHandiOverrides();
     initHandi();
 
     // Setup menu filters
@@ -4157,6 +4095,11 @@ function completeLogin(user, toastMsg) {
     renderAuthState();
     showToast(toastMsg);
 
+    // Pull this user's booking notices from Supabase so the inbox badge is live,
+    // then keep polling so notices arrive on this device without a reload.
+    refreshInbox();
+    startInboxPolling();
+
     const resume = pendingAfterLogin;
     pendingAfterLogin = null;
     closeAuthModal();
@@ -4186,6 +4129,9 @@ function handleForgot(e) {
 // --- Logout ---
 function logoutUser() {
     setCurrentUser(null);
+    inboxCache = [];
+    stopInboxPolling();
+    updateInboxBadge();
     renderAuthState();
     document.getElementById('userChip').classList.remove('open');
     showToast('You have been logged out.');
@@ -4245,20 +4191,32 @@ function setupAuth() {
     document.getElementById('signupForm').addEventListener('submit', handleSignup);
     document.getElementById('forgotForm').addEventListener('submit', handleForgot);
     renderAuthState();
-    updateInboxBadge();
+    // If a session is already active, load this user's notices from Supabase
+    // and keep them live via polling.
+    if (isLoggedIn()) { refreshInbox(); startInboxPolling(); } else updateInboxBadge();
 }
 
 // ============================================
 // INBOX — admin -> customer booking notices
 // --------------------------------------------
 // When an admin confirms or cancels a Handi booking, updateResStatus() calls
-// notifyUser(), which drops a notice into the customer's Inbox (localStorage).
-// Notices are keyed to the customer by email (falling back to phone) so the
-// right person sees them after they log in. The header mailbox icon shows an
-// unread count, and openInbox() lists the notices and marks them read.
+// notifyUser(), which writes the notice to Supabase (table: notices) so it
+// reaches the customer on ANY device. The old localStorage-only inbox failed
+// because localStorage is per-browser: a notice written on the admin's machine
+// never appeared on the customer's. Notices match a customer by email OR phone
+// (either is enough — a booking may carry only a phone while the account also
+// has an email). localStorage is kept as an offline fallback only.
 // FUTURE: also deliver each notice by Email + WhatsApp (see hook in notifyUser).
 // ============================================
 const GC_INBOX_KEY = 'gc_inbox';
+
+// In-memory merged view (Supabase primary + local fallback) for the logged-in user.
+let inboxCache = [];
+
+// Poll Supabase so a notice sent from the admin's device shows up on the
+// customer's open device without a manual reload.
+let inboxPollTimer = null;
+const INBOX_POLL_MS = 20000;
 
 function getInbox() {
     try { return JSON.parse(localStorage.getItem(GC_INBOX_KEY) || '[]'); }
@@ -4282,37 +4240,132 @@ function currentInboxKey() {
     return inboxKeyFor(user.email || user.phone);
 }
 
-// Called from updateResStatus() when an admin confirms/cancels a booking.
-function notifyUser(res, title, body) {
-    const key = inboxKeyFor(res.email || res.phone);
-    if (!key) return;
-    const list = getInbox();
-    list.unshift({
-        id: Date.now() + Math.floor(Math.random() * 1000),
-        userKey: key,
+// ---- Supabase-backed notices (the real cross-device inbox) ----
+// Build "email.eq.x,phone.eq.y" so a notice matches the user by EITHER field.
+function noticeMatchFilters() {
+    const user = getCurrentUser();
+    if (!user) return [];
+    const email = inboxKeyFor(user.email);
+    const phone = (user.phone || '').trim();
+    const filters = [];
+    if (email) filters.push(`email.eq.${email}`);
+    if (phone) filters.push(`phone.eq.${phone}`);
+    return filters;
+}
+
+async function createNoticeDb(res, title, body) {
+    if (!sbReady()) return false;
+    const { error } = await supabaseClient.from('notices').insert([{
+        email: inboxKeyFor(res.email),
+        phone: (res.phone || '').trim(),
         title: title,
         body: body,
-        date: new Date().toISOString(),
         read: false
-    });
-    saveInbox(list);
-    updateInboxBadge();
+    }]);
+    if (error) { console.error('[notices] insert failed — create the "notices" table in Supabase (see project setup notes):', error); return false; }
+    return true;
+}
+
+// Returns an array on success, or null when Supabase is unavailable/errored so
+// the caller can fall back to localStorage.
+async function fetchMyNoticesDb() {
+    if (!sbReady()) return null;
+    const filters = noticeMatchFilters();
+    if (!filters.length) return [];
+    const { data, error } = await supabaseClient
+        .from('notices').select('*').or(filters.join(',')).order('created_at', { ascending: false });
+    if (error) { console.error('[notices] fetch failed:', error); return null; }
+    return data.map(n => ({ id: 'db-' + n.id, title: n.title, body: n.body, date: n.created_at, read: n.read }));
+}
+
+async function markMyNoticesReadDb() {
+    if (!sbReady()) return;
+    const filters = noticeMatchFilters();
+    if (!filters.length) return;
+    const { error } = await supabaseClient
+        .from('notices').update({ read: true }).or(filters.join(',')).eq('read', false);
+    if (error) console.error('[notices] mark read failed:', error);
+}
+
+// Called from updateResStatus() when an admin confirms/cancels a booking.
+async function notifyUser(res, title, body) {
+    // Primary delivery: Supabase, so the customer sees it on their own device.
+    await createNoticeDb(res, title, body);
+
+    // Offline / same-browser fallback copy.
+    const key = inboxKeyFor(res.email || res.phone);
+    if (key) {
+        const list = getInbox();
+        list.unshift({
+            id: Date.now() + Math.floor(Math.random() * 1000),
+            userKey: key,
+            title: title,
+            body: body,
+            date: new Date().toISOString(),
+            read: false
+        });
+        saveInbox(list);
+    }
 
     // FUTURE: deliver the same notice through other channels.
     //   sendEmailNotice(res.email, title, body);
     //   sendWhatsAppNotice(res.phone, title, body);
 }
 
-function myNotices() {
+// localStorage notices for the logged-in user (fallback source).
+function myLocalNotices() {
     const key = currentInboxKey();
     if (!key) return [];
-    return getInbox().filter(n => n.userKey === key);
+    return getInbox()
+        .filter(n => n.userKey === key)
+        .map(n => ({ id: n.id, title: n.title, body: n.body, date: n.date, read: n.read }));
 }
+
+// Rebuild inboxCache from Supabase (primary) with a localStorage fallback.
+async function refreshInbox() {
+    if (!isLoggedIn()) { inboxCache = []; updateInboxBadge(); return inboxCache; }
+    const db = await fetchMyNoticesDb();      // array on success, null on failure
+    const local = myLocalNotices();
+    let notices;
+    if (db === null) {
+        notices = local;                       // Supabase unavailable -> fallback
+    } else if (db.length === 0 && local.length > 0) {
+        notices = local;                       // nothing in DB yet -> show local copy
+    } else {
+        notices = db;                          // Supabase is the source of truth
+    }
+    inboxCache = notices.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+    updateInboxBadge();
+    const modal = document.getElementById('inboxModal');
+    if (modal && modal.classList.contains('active')) renderInbox();
+    return inboxCache;
+}
+
+// Keep the inbox live for an open, logged-in device (e.g. the customer's phone
+// while the admin confirms a booking on a laptop). Refreshes when the tab is
+// visible; pauses in the background to save battery/requests.
+function startInboxPolling() {
+    stopInboxPolling();
+    if (!isLoggedIn()) return;
+    inboxPollTimer = setInterval(() => {
+        if (document.visibilityState === 'visible' && isLoggedIn()) refreshInbox();
+    }, INBOX_POLL_MS);
+}
+
+function stopInboxPolling() {
+    if (inboxPollTimer) { clearInterval(inboxPollTimer); inboxPollTimer = null; }
+}
+
+// When the tab comes back to the foreground, refresh immediately so the user
+// doesn't wait a full poll interval to see a notice that arrived while away.
+document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && isLoggedIn()) refreshInbox();
+});
 
 function updateInboxBadge() {
     const badge = document.getElementById('inboxBadge');
     if (!badge) return;
-    const unread = myNotices().filter(n => !n.read).length;
+    const unread = inboxCache.filter(n => !n.read).length;
     if (unread > 0) {
         badge.textContent = unread > 9 ? '9+' : String(unread);
         badge.style.display = 'flex';
@@ -4324,7 +4377,7 @@ function updateInboxBadge() {
 function renderInbox() {
     const listEl = document.getElementById('inboxList');
     if (!listEl) return;
-    const notices = myNotices();
+    const notices = inboxCache;
     if (notices.length === 0) {
         listEl.innerHTML = '<div class="inbox-empty"><i class="fas fa-inbox"></i><p>No messages yet. Booking updates will appear here.</p></div>';
         return;
@@ -4344,20 +4397,27 @@ function renderInbox() {
     }).join('');
 }
 
-function openInbox() {
+async function openInbox() {
     if (!isLoggedIn()) { openAuthModal('login'); return; }
-    renderInbox();
     const modal = document.getElementById('inboxModal');
     if (modal) modal.classList.add('active');
 
-    // Opening the inbox marks the current user's notices as read.
+    const listEl = document.getElementById('inboxList');
+    if (listEl) listEl.innerHTML = '<div class="inbox-empty"><i class="fas fa-spinner fa-spin"></i><p>Loading messages…</p></div>';
+
+    await refreshInbox();
+    renderInbox();
+
+    // Opening the inbox marks the current user's notices as read (DB + local).
+    await markMyNoticesReadDb();
     const key = currentInboxKey();
     if (key) {
         const list = getInbox();
         list.forEach(n => { if (n.userKey === key) n.read = true; });
         saveInbox(list);
-        updateInboxBadge();
     }
+    inboxCache.forEach(n => { n.read = true; });
+    updateInboxBadge();
 }
 
 function closeInbox() {
@@ -4375,18 +4435,47 @@ let currentHandiVariant = 'chicken';
 
 const handiPlans = {
     chicken: [
-        { key: 'chk30', members: '30 Members', price: 4999, badge: 'Popular', items: ['Chicken Biryani (5kg)', 'Chicken Curry (3kg)', 'Paneer Butter Masala (2kg)', 'Dal Tadka (3kg)', 'Mixed Raita (2kg)', '30 Soft Drinks', '30 Gulab Jamuns'] },
-        { key: 'chk40', members: '40 Members', price: 6499, badge: 'Best Value', featured: true, items: ['Chicken Biryani (7kg)', 'Chicken 65 (3kg)', 'Paneer Tikka (3kg)', 'Dal Tadka (4kg)', 'Mixed Raita (3kg)', '40 Soft Drinks', '40 Gulab Jamuns', '40 Ice Creams'] },
-        { key: 'chk50', members: '50 Members', price: 7999, badge: '', items: ['Chicken Biryani (9kg)', 'Butter Chicken (5kg)', 'Paneer Tikka (4kg)', 'Dal Tadka (5kg)', 'Mixed Raita (4kg)', '50 Soft Drinks', '50 Gulab Jamuns', '50 Ice Creams', 'Welcome Drink'] },
-        { key: 'chk50plus', members: '50+ Members', price: 9999, badge: 'Premium', items: ['Chicken Biryani (12kg)', 'Butter Chicken (7kg)', 'Chicken 65 (4kg)', 'Paneer Tikka (5kg)', 'Dal Tadka (6kg)', 'Mixed Raita (5kg)', 'Unlimited Soft Drinks', 'Assorted Desserts', 'Welcome Drink', 'Live Counter'] }
+        { key: 'chk30', members: '30 Members', price: 4999, rating: 4.6, badge: 'Popular', items: ['Chicken Biryani (5kg)', 'Chicken Curry (3kg)', 'Paneer Butter Masala (2kg)', 'Dal Tadka (3kg)', 'Mixed Raita (2kg)', '30 Soft Drinks', '30 Gulab Jamuns'] },
+        { key: 'chk40', members: '40 Members', price: 6499, rating: 4.8, badge: 'Best Value', featured: true, items: ['Chicken Biryani (7kg)', 'Chicken 65 (3kg)', 'Paneer Tikka (3kg)', 'Dal Tadka (4kg)', 'Mixed Raita (3kg)', '40 Soft Drinks', '40 Gulab Jamuns', '40 Ice Creams'] },
+        { key: 'chk50', members: '50 Members', price: 7999, rating: 4.7, badge: '', items: ['Chicken Biryani (9kg)', 'Butter Chicken (5kg)', 'Paneer Tikka (4kg)', 'Dal Tadka (5kg)', 'Mixed Raita (4kg)', '50 Soft Drinks', '50 Gulab Jamuns', '50 Ice Creams', 'Welcome Drink'] },
+        { key: 'chk50plus', members: '50+ Members', price: 9999, rating: 4.9, badge: 'Premium', items: ['Chicken Biryani (12kg)', 'Butter Chicken (7kg)', 'Chicken 65 (4kg)', 'Paneer Tikka (5kg)', 'Dal Tadka (6kg)', 'Mixed Raita (5kg)', 'Unlimited Soft Drinks', 'Assorted Desserts', 'Welcome Drink', 'Live Counter'] }
     ],
     mutton: [
-        { key: 'mtn30', members: '30 Members', price: 5999, badge: 'Popular', items: ['Mutton Biryani (5kg)', 'Mutton Curry (3kg)', 'Paneer Butter Masala (2kg)', 'Dal Tadka (3kg)', 'Mixed Raita (2kg)', '30 Soft Drinks', '30 Gulab Jamuns'] },
-        { key: 'mtn40', members: '40 Members', price: 7799, badge: 'Best Value', featured: true, items: ['Mutton Biryani (7kg)', 'Mutton Rogan Josh (4kg)', 'Paneer Tikka (3kg)', 'Dal Tadka (4kg)', 'Mixed Raita (3kg)', '40 Soft Drinks', '40 Gulab Jamuns', '40 Ice Creams'] },
-        { key: 'mtn50', members: '50 Members', price: 9499, badge: '', items: ['Mutton Biryani (9kg)', 'Mutton Rogan Josh (5kg)', 'Mutton Chukka (4kg)', 'Dal Tadka (5kg)', 'Mixed Raita (4kg)', '50 Soft Drinks', '50 Gulab Jamuns', '50 Ice Creams', 'Welcome Drink'] },
-        { key: 'mtn50plus', members: '50+ Members', price: 11499, badge: 'Premium', items: ['Mutton Biryani (12kg)', 'Mutton Rogan Josh (7kg)', 'Mutton Chukka (5kg)', 'Paneer Tikka (5kg)', 'Dal Tadka (6kg)', 'Mixed Raita (5kg)', 'Unlimited Soft Drinks', 'Assorted Desserts', 'Welcome Drink', 'Live Counter'] }
+        { key: 'mtn30', members: '30 Members', price: 5999, rating: 4.6, badge: 'Popular', items: ['Mutton Biryani (5kg)', 'Mutton Curry (3kg)', 'Paneer Butter Masala (2kg)', 'Dal Tadka (3kg)', 'Mixed Raita (2kg)', '30 Soft Drinks', '30 Gulab Jamuns'] },
+        { key: 'mtn40', members: '40 Members', price: 7799, rating: 4.8, badge: 'Best Value', featured: true, items: ['Mutton Biryani (7kg)', 'Mutton Rogan Josh (4kg)', 'Paneer Tikka (3kg)', 'Dal Tadka (4kg)', 'Mixed Raita (3kg)', '40 Soft Drinks', '40 Gulab Jamuns', '40 Ice Creams'] },
+        { key: 'mtn50', members: '50 Members', price: 9499, rating: 4.7, badge: '', items: ['Mutton Biryani (9kg)', 'Mutton Rogan Josh (5kg)', 'Mutton Chukka (4kg)', 'Dal Tadka (5kg)', 'Mixed Raita (4kg)', '50 Soft Drinks', '50 Gulab Jamuns', '50 Ice Creams', 'Welcome Drink'] },
+        { key: 'mtn50plus', members: '50+ Members', price: 11499, rating: 4.9, badge: 'Premium', items: ['Mutton Biryani (12kg)', 'Mutton Rogan Josh (7kg)', 'Mutton Chukka (5kg)', 'Paneer Tikka (5kg)', 'Dal Tadka (6kg)', 'Mixed Raita (5kg)', 'Unlimited Soft Drinks', 'Assorted Desserts', 'Welcome Drink', 'Live Counter'] }
     ]
 };
+
+const GC_HANDI_KEY = 'gc_handi_overrides';
+
+function loadHandiOverrides() {
+    try {
+        return JSON.parse(localStorage.getItem(GC_HANDI_KEY)) || {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function saveHandiOverride(variant, key, price, rating) {
+    const overrides = loadHandiOverrides();
+    overrides[variant + '|' + key] = { price, rating };
+    localStorage.setItem(GC_HANDI_KEY, JSON.stringify(overrides));
+}
+
+function applyHandiOverrides() {
+    const overrides = loadHandiOverrides();
+    Object.keys(handiPlans).forEach(variant => {
+        handiPlans[variant].forEach(plan => {
+            const ov = overrides[variant + '|' + plan.key];
+            if (ov) {
+                plan.price = ov.price;
+                plan.rating = ov.rating;
+            }
+        });
+    });
+}
 
 function renderHandiPlans(variant) {
     const container = document.getElementById('handiContainer');
@@ -4399,6 +4488,10 @@ function renderHandiPlans(variant) {
             <div class="handi-header">
                 <i class="fas fa-users"></i>
                 <h3>${plan.members}</h3>
+            </div>
+            <div class="handi-rating" style="display:flex;align-items:center;justify-content:center;gap:4px;color:var(--gold);font-weight:600;margin-bottom:6px;">
+                <i class="fas fa-star"></i>
+                <span>${(plan.rating ?? 0).toFixed(1)}</span>
             </div>
             <div class="handi-price">
                 <span class="currency">₹</span>
@@ -4721,6 +4814,43 @@ function renderMenuEdit(container) {
                 `).join('')}
             </tbody>
         </table>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin:36px 0 20px;">
+            <h3 style="color:var(--white);">Handi Items</h3>
+            <span style="color:var(--text-muted);font-size:0.85rem;">Edit price &amp; rating — changes show instantly in the Handi section</span>
+        </div>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Variant</th>
+                    <th>Plan</th>
+                    <th>Price (₹)</th>
+                    <th>Rating</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${['chicken', 'mutton'].map(variant => handiPlans[variant].map(plan => `
+                    <tr>
+                        <td><span class="status-badge status-confirmed">${variant === 'chicken' ? 'Chicken' : 'Mutton'}</span></td>
+                        <td style="color:var(--white);font-weight:600;">${plan.members}</td>
+                        <td>
+                            <input type="number" id="handi-price-${variant}-${plan.key}" value="${plan.price}" min="0" step="1"
+                                style="width:100px;background:var(--black);color:var(--gold);border:1px solid var(--black-lighter);border-radius:6px;padding:6px 8px;font-weight:600;">
+                        </td>
+                        <td>
+                            <input type="number" id="handi-rating-${variant}-${plan.key}" value="${plan.rating}" min="0" max="5" step="0.1"
+                                style="width:80px;background:var(--black);color:var(--white);border:1px solid var(--black-lighter);border-radius:6px;padding:6px 8px;">
+                        </td>
+                        <td>
+                            <button onclick="saveHandiItem('${variant}', '${plan.key}')" style="background:var(--success);color:white;border:none;padding:6px 14px;border-radius:5px;cursor:pointer;font-size:0.8rem;font-weight:600;">
+                                <i class="fas fa-save"></i> Save
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')).join('')}
+            </tbody>
+        </table>
     `;
 }
 
@@ -4816,9 +4946,9 @@ async function updateResStatus(resId) {
     // Notify the customer in their Inbox when the booking is confirmed or
     // cancelled. (Future: also deliver via Email + WhatsApp — see notifyUser.)
     if (next === 'confirmed') {
-        notifyUser(res, 'Booking Confirmed', 'Your Booking order is confirmed.');
+        await notifyUser(res, 'Booking Confirmed', 'Your Booking order is confirmed.');
     } else if (next === 'cancelled') {
-        notifyUser(res, 'Booking Cancelled', 'We are Sorry to cancelled your booking order we will contact you soon.');
+        await notifyUser(res, 'Booking Cancelled', 'We are Sorry to cancelled your booking order we will contact you soon.');
     }
 
     await fetchReservations();
@@ -4836,6 +4966,29 @@ function editItem(itemId) {
             renderMenu();
         }
     }
+}
+
+// Save a Handi plan's price + rating from the admin "Handi Items" subsection,
+// persist the override, and reflect it live in the public Handi section.
+function saveHandiItem(variant, key) {
+    const plan = (handiPlans[variant] || []).find(p => p.key === key);
+    if (!plan) return;
+
+    const priceEl = document.getElementById(`handi-price-${variant}-${key}`);
+    const ratingEl = document.getElementById(`handi-rating-${variant}-${key}`);
+    const price = parseInt(priceEl.value, 10);
+    const rating = parseFloat(ratingEl.value);
+
+    if (isNaN(price) || price < 0) { showToast('Enter a valid price'); return; }
+    if (isNaN(rating) || rating < 0 || rating > 5) { showToast('Rating must be between 0 and 5'); return; }
+
+    plan.price = price;
+    plan.rating = rating;
+    saveHandiOverride(variant, key, price, rating);
+    showToast(`${variant === 'chicken' ? 'Chicken' : 'Mutton'} ${plan.members} Handi updated`);
+
+    renderMenuEdit(document.getElementById('adminContent'));
+    renderHandiPlans(currentHandiVariant);
 }
 
 function deleteItem(itemId) {
@@ -5008,5 +5161,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 </script>
+
+<!-- ===== 3D Cinematic Intro: Three.js + self-contained controller ===== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="galaxy-intro.js"></script>
 </body>
 </html>
