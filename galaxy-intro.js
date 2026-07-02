@@ -67,16 +67,19 @@
         var renderer;
         try {
             renderer = new THREE.WebGLRenderer({
-                canvas: canvas, antialias: !isMobile, alpha: true,
+                canvas: canvas, antialias: true, alpha: true,
                 powerPreference: 'high-performance'
             });
         } catch (e) { finish(); return; }
 
+        // Render at the device's real pixel density (capped at 2 for perf) so
+        // the scene is crisp on high-DPI phones instead of upscaled/blurry.
+        // The previous 1.5 cap on mobile was a major cause of the soft look.
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
         renderer.setSize(W, H);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
 
         var scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x0a0a0a, 0.045);
+        scene.fog = new THREE.FogExp2(0x0a0a0a, 0.03);
 
         var camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
         camera.position.set(0, 0, 13);
@@ -129,8 +132,14 @@
         // ---------- Metallic gold "Galaxy Café" logo (canvas texture) ----------
         function makeLogo() {
             var c = document.createElement('canvas');
-            c.width = 1024; c.height = 512;
+            // Supersample the label texture (2x) so the metallic text stays
+            // crisp when the logo plane is drawn large on high-DPI / desktop
+            // screens. ctx.scale lets the drawing code keep 1024x512 coords
+            // while the actual bitmap is 2048x1024 -> sharp, mip-mapped text.
+            var SS = 2;
+            c.width = 1024 * SS; c.height = 512 * SS;
             var ctx = c.getContext('2d');
+            ctx.scale(SS, SS);
             var grad = ctx.createLinearGradient(0, 120, 0, 400);
             grad.addColorStop(0, '#F5E6B8');
             grad.addColorStop(0.5, '#C9A962');
