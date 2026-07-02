@@ -230,13 +230,42 @@
         window.addEventListener('pointermove', onPointer);
         window.addEventListener('deviceorientation', onOrient);
 
-        // ---------- Resize ----------
+        // ---------- Responsive fit ----------
+        // The logo + floaters are authored for a wide (landscape) frame. On a
+        // portrait phone the horizontal field of view collapses, which would
+        // clip the logo text and the side floaters. Instead of relying on a
+        // fixed size, we measure how much world-space is actually visible at
+        // the content's resting distance and scale the whole content group so
+        // it is always fully *contained* — on any screen ratio, dynamically.
+        var CONTENT_HW = 4.2;   // horizontal half-extent that must stay visible
+        var CONTENT_HH = 2.4;   // vertical half-extent that must stay visible
+        var FIT_DIST   = 9.4;   // camera's resting distance to the content plane
+        function computeFit() {
+            var aspect  = W / H;
+            var vHalf   = Math.tan((camera.fov * Math.PI / 180) / 2);
+            var availHH = FIT_DIST * vHalf;      // visible half-height (world units)
+            var availHW = availHH * aspect;      // visible half-width  (world units)
+            // reserve headroom for the cinematic orbit + pointer/gyro parallax
+            var panX = isMobile ? 0.7 : 1.2;
+            var panY = isMobile ? 0.6 : 0.8;
+            var scale = Math.min(
+                (availHW - panX) / CONTENT_HW,
+                (availHH - panY) / CONTENT_HH
+            );
+            // contain only: never upscale past the design size, never vanish
+            group.scale.setScalar(Math.max(0.34, Math.min(scale, 1)));
+        }
+
+        // ---------- Resize / orientation ----------
         function onResize() {
             W = window.innerWidth; H = window.innerHeight;
             camera.aspect = W / H; camera.updateProjectionMatrix();
             renderer.setSize(W, H);
+            computeFit();
         }
+        computeFit();                                   // set initial framing
         window.addEventListener('resize', onResize);
+        window.addEventListener('orientationchange', onResize);
 
         // signal CSS to fade the canvas in, and reveal scene next frame
         requestAnimationFrame(function () { overlay.classList.add('gi-ready'); });
@@ -299,6 +328,7 @@
             clearTimeout(autoTimer);
             cancelAnimationFrame(raf);
             window.removeEventListener('resize', onResize);
+            window.removeEventListener('orientationchange', onResize);
             window.removeEventListener('pointermove', onPointer);
             window.removeEventListener('deviceorientation', onOrient);
             scene.traverse(function (o) {

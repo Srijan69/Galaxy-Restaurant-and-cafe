@@ -142,6 +142,13 @@
            color: rgba(232, 213, 163, 0.7); }
 }
 
+/* Use the dynamic viewport unit where supported so the overlay always covers
+   the full mobile screen even as the browser's URL bar shows/hides. Falls back
+   to the fixed inset:0 above on browsers without dvh support. */
+@supports (height: 100dvh) {
+    #galaxy-intro { height: 100dvh; }
+}
+
 /* Mobile tuning */
 @media (max-width: 600px) {
     #galaxy-intro-skip {
@@ -155,6 +162,39 @@
         font-size: 12px;
         letter-spacing: 3px;
         bottom: 66px;
+    }
+}
+
+/* Very small / narrow phones: tighten chrome so it never crowds the scene. */
+@media (max-width: 380px) {
+    #galaxy-intro-skip {
+        bottom: 16px;
+        right: 12px;
+        padding: 8px 14px;
+        font-size: 10px;
+        letter-spacing: 1.5px;
+    }
+    #galaxy-intro-caption {
+        font-size: 11px;
+        letter-spacing: 2px;
+        bottom: 58px;
+        padding: 0 14px;
+    }
+}
+
+/* Short landscape phones: keep caption/skip compact and out of the scene's
+   vertical center so the 3D framing stays clean. */
+@media (max-height: 480px) and (orientation: landscape) {
+    #galaxy-intro-skip {
+        bottom: 12px;
+        right: 14px;
+        padding: 7px 14px;
+        font-size: 10px;
+    }
+    #galaxy-intro-caption {
+        bottom: 12px;
+        font-size: 11px;
+        letter-spacing: 3px;
     }
 }
 
