@@ -1,0 +1,34 @@
+{
+  "sha": "17312fc85a5c95e4c0afd26c5d37a1e8fbda2d22",
+  "ts": "2026-07-02T04:28:03.153Z",
+  "componentCount": 3,
+  "components": [
+    {
+      "ecosystem": "pypi",
+      "name": "pytest",
+      "version": "8.0.0",
+      "purl": "pkg:pypi/pytest@8.0.0",
+      "scope": "required",
+      "isUnpinned": false,
+      "sha256": null
+    },
+    {
+      "ecosystem": "pypi",
+      "name": "pytest-cov",
+      "version": "4.1.0",
+      "purl": "pkg:pypi/pytest-cov@4.1.0",
+      "scope": "required",
+      "isUnpinned": false,
+      "sha256": null
+    },
+    {
+      "ecosystem": "pypi",
+      "name": "pytest-mock",
+      "version": "3.12.0",
+      "purl": "pkg:pypi/pytest-mock@3.12.0",
+      "scope": "required",
+      "isUnpinned": false,
+      "sha256": null
+    }
+  ]
+}

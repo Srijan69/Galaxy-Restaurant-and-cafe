@@ -1,0 +1,32 @@
+{
+  "target": "http://127.0.0.1:8000/index.html",
+  "when": "2026-06-29T14:48:19.574Z",
+  "test1_reservations_xss": {
+    "fired": 1,
+    "sink": "renderReservations -> innerHTML",
+    "nameCellHasLiveImg": true,
+    "evidence": "<img src=\"x\" onerror=\"window.__xss.res++\">"
+  },
+  "test2_feedback_xss": {
+    "fired": 1,
+    "sink": "renderFeedback -> innerHTML",
+    "liveNodes": 2
+  },
+  "test3_inbox_xss": {
+    "fired": 2,
+    "sink": "renderInbox -> innerHTML",
+    "liveNodes": 2
+  },
+  "test4_admin_hardcoded_creds": {
+    "exposedCreds": {
+      "admin": "admin123",
+      "manager": "manager123",
+      "chef": "chef123"
+    },
+    "defaultLoginAccepted": true
+  },
+  "test5_admin_gate_bypass": {
+    "adminLoggedIn": true,
+    "dashboardDisplay": "flex"
+  }
+}

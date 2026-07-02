@@ -139,10 +139,12 @@
             ctx.shadowColor = 'rgba(201,169,98,0.6)'; ctx.shadowBlur = 32;
             ctx.fillStyle = grad;
             ctx.font = '700 150px "Playfair Display", Georgia, serif';
-            ctx.fillText('Galaxy', 512, 210);
-            ctx.fillText('Café', 512, 370);
+            ctx.fillText('Galaxy', 512, 180);
+            ctx.shadowBlur = 18;
+            ctx.font = '700 84px "Playfair Display", Georgia, serif';
+            ctx.fillText('Restaurant And Cafe', 512, 360);
             ctx.shadowBlur = 12; ctx.strokeStyle = '#C9A962'; ctx.lineWidth = 4;
-            ctx.beginPath(); ctx.moveTo(340, 290); ctx.lineTo(684, 290); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(360, 268); ctx.lineTo(664, 268); ctx.stroke();
 
             var tex = new THREE.CanvasTexture(c);
             tex.anisotropy = renderer.capabilities.getMaxAnisotropy ?
